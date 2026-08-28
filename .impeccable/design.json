@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-28T00:00:00+08:00",
+  "title": "Design System: 她的姊妹节",
+  "extensions": {
+    "colorMeta": {
+      "indigo-night": {
+        "role": "primary",
+        "displayName": "靛夜",
+        "canonical": "oklch(18% 0.035 255)",
+        "tonalRamp": ["oklch(15% 0.035 255)", "oklch(24% 0.035 255)", "oklch(34% 0.033 255)", "oklch(45% 0.030 255)", "oklch(58% 0.025 255)", "oklch(70% 0.020 255)", "oklch(83% 0.012 255)", "oklch(95% 0.006 255)"]
+      },
+      "indigo-ink": {
+        "role": "primary",
+        "displayName": "墨靛",
+        "canonical": "oklch(24% 0.052 255)",
+        "tonalRamp": ["oklch(15% 0.050 255)", "oklch(24% 0.052 255)", "oklch(34% 0.050 255)", "oklch(45% 0.045 255)", "oklch(58% 0.038 255)", "oklch(70% 0.028 255)", "oklch(83% 0.016 255)", "oklch(95% 0.006 255)"]
+      },
+      "indigo-cloth": {
+        "role": "primary",
+        "displayName": "布靛",
+        "canonical": "oklch(34% 0.073 257)",
+        "tonalRamp": ["oklch(15% 0.060 257)", "oklch(24% 0.070 257)", "oklch(34% 0.073 257)", "oklch(45% 0.068 257)", "oklch(58% 0.055 257)", "oklch(70% 0.040 257)", "oklch(83% 0.022 257)", "oklch(95% 0.008 257)"]
+      },
+      "river-cyan": {
+        "role": "secondary",
+        "displayName": "河青",
+        "canonical": "oklch(52% 0.110 210)",
+        "tonalRamp": ["oklch(15% 0.050 210)", "oklch(24% 0.070 210)", "oklch(34% 0.090 210)", "oklch(45% 0.105 210)", "oklch(52% 0.110 210)", "oklch(70% 0.095 210)", "oklch(83% 0.060 210)", "oklch(95% 0.020 210)"]
+      },
+      "river-cyan-bright": {
+        "role": "secondary",
+        "displayName": "亮河青",
+        "canonical": "oklch(72% 0.090 205)",
+        "tonalRamp": ["oklch(15% 0.045 205)", "oklch(24% 0.060 205)", "oklch(34% 0.075 205)", "oklch(45% 0.085 205)", "oklch(58% 0.090 205)", "oklch(72% 0.090 205)", "oklch(83% 0.060 205)", "oklch(95% 0.018 205)"]
+      },
+      "madder-red": {
+        "role": "secondary",
+        "displayName": "茜红",
+        "canonical": "oklch(48% 0.170 10)",
+        "tonalRamp": ["oklch(15% 0.070 10)", "oklch(24% 0.110 10)", "oklch(34% 0.145 10)", "oklch(48% 0.170 10)", "oklch(58% 0.160 10)", "oklch(70% 0.120 10)", "oklch(83% 0.070 10)", "oklch(95% 0.020 10)"]
+      },
+      "madder-red-bright": {
+        "role": "secondary",
+        "displayName": "亮茜红",
+        "canonical": "oklch(61% 0.190 15)",
+        "tonalRamp": ["oklch(15% 0.075 15)", "oklch(24% 0.115 15)", "oklch(34% 0.150 15)", "oklch(46% 0.180 15)", "oklch(61% 0.190 15)", "oklch(72% 0.145 15)", "oklch(84% 0.080 15)", "oklch(95% 0.022 15)"]
+      },
+      "sun-ochre": {
+        "role": "tertiary",
+        "displayName": "日光赭",
+        "canonical": "oklch(75% 0.130 84)",
+        "tonalRamp": ["oklch(15% 0.050 84)", "oklch(24% 0.070 84)", "oklch(34% 0.090 84)", "oklch(46% 0.110 84)", "oklch(60% 0.125 84)", "oklch(75% 0.130 84)", "oklch(85% 0.085 84)", "oklch(95% 0.025 84)"]
+      },
+      "wood-dark": {
+        "role": "neutral",
+        "displayName": "深木",
+        "canonical": "oklch(28% 0.035 55)",
+        "tonalRamp": ["oklch(15% 0.030 55)", "oklch(24% 0.034 55)", "oklch(34% 0.035 55)", "oklch(46% 0.032 55)", "oklch(58% 0.028 55)", "oklch(70% 0.020 55)", "oklch(83% 0.012 55)", "oklch(95% 0.005 55)"]
+      },
+      "wood-mid": {
+        "role": "neutral",
+        "displayName": "中木",
+        "canonical": "oklch(42% 0.045 58)",
+        "tonalRamp": ["oklch(15% 0.030 58)", "oklch(24% 0.040 58)", "oklch(34% 0.045 58)", "oklch(42% 0.045 58)", "oklch(58% 0.038 58)", "oklch(70% 0.028 58)", "oklch(83% 0.016 58)", "oklch(95% 0.006 58)"]
+      },
+      "silver": {
+        "role": "neutral",
+        "displayName": "银光",
+        "canonical": "oklch(82% 0.015 245)",
+        "tonalRamp": ["oklch(15% 0.010 245)", "oklch(24% 0.012 245)", "oklch(34% 0.014 245)", "oklch(46% 0.015 245)", "oklch(58% 0.015 245)", "oklch(70% 0.015 245)", "oklch(82% 0.015 245)", "oklch(95% 0.006 245)"]
+      },
+      "mist-white": {
+        "role": "neutral",
+        "displayName": "雾白",
+        "canonical": "oklch(96% 0.006 250)",
+        "tonalRamp": ["oklch(15% 0.006 250)", "oklch(24% 0.006 250)", "oklch(34% 0.006 250)", "oklch(46% 0.006 250)", "oklch(58% 0.006 250)", "oklch(70% 0.006 250)", "oklch(83% 0.006 250)", "oklch(96% 0.006 250)"]
+      },
+      "muted-text": {
+        "role": "neutral",
+        "displayName": "淡灰字",
+        "canonical": "oklch(72% 0.014 250)",
+        "tonalRamp": ["oklch(15% 0.010 250)", "oklch(24% 0.012 250)", "oklch(34% 0.014 250)", "oklch(46% 0.014 250)", "oklch(58% 0.014 250)", "oklch(72% 0.014 250)", "oklch(83% 0.010 250)", "oklch(95% 0.005 250)"]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "危险朱",
+        "canonical": "oklch(63% 0.200 28)",
+        "tonalRamp": ["oklch(15% 0.075 28)", "oklch(24% 0.115 28)", "oklch(34% 0.155 28)", "oklch(46% 0.190 28)", "oklch(58% 0.200 28)", "oklch(63% 0.200 28)", "oklch(83% 0.085 28)", "oklch(95% 0.025 28)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "叙事展示", "purpose": "封面、章节名和结尾记忆卡。" },
+      "headline": { "displayName": "场景标题", "purpose": "场景与小游戏步骤标题。" },
+      "title": { "displayName": "面板标题", "purpose": "面板、人物名和关键选择。" },
+      "body": { "displayName": "正文对白", "purpose": "对白、说明和 AI 回答。" },
+      "label": { "displayName": "操作标签", "purpose": "按钮、热点和任务项。" },
+      "caption": { "displayName": "辅助说明", "purpose": "来源、时间和辅助状态。" }
+    },
+    "shadows": [
+      { "name": "scene-overlay", "value": "0 4px 8px rgb(4 10 20 / 24%)", "purpose": "任务面板、对话带和文化来源抽屉。" },
+      { "name": "interactive-lift", "value": "0 2px 4px rgb(4 10 20 / 28%)", "purpose": "按钮和热点悬停反馈。" },
+      { "name": "closeup-layer", "value": "0 12px 24px rgb(4 10 20 / 32%)", "purpose": "换装或烹饪近景层。" }
+    ],
+    "motion": [
+      { "name": "duration-state", "value": "180ms", "purpose": "悬停、选中和完成状态。" },
+      { "name": "duration-panel", "value": "280ms", "purpose": "抽屉和近景面板。" },
+      { "name": "duration-scene", "value": "520ms", "purpose": "场景转场中值。" },
+      { "name": "ease-out-quart", "value": "cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "默认状态和面板缓动。" }
+    ],
+    "breakpoints": [
+      { "name": "compact-landscape", "value": "768px" },
+      { "name": "stage-min", "value": "1024px" },
+      { "name": "stage-base", "value": "1440px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "每屏唯一的主要确认行动。",
+      "html": "<button class=\"ds-btn-primary\">继续</button>",
+      "css": ".ds-btn-primary{height:44px;padding:12px 20px;border:0;border-radius:8px;background:oklch(52% .11 210);color:oklch(96% .006 250);font:600 15px/1.3 'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif;transition:background 180ms cubic-bezier(.25,1,.5,1),transform 180ms cubic-bezier(.25,1,.5,1),box-shadow 180ms cubic-bezier(.25,1,.5,1);cursor:pointer}.ds-btn-primary:hover{background:oklch(48% .11 210);transform:translateY(-1px);box-shadow:0 2px 4px rgb(4 10 20/.28)}.ds-btn-primary:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:2px}.ds-btn-primary:active{transform:none;box-shadow:none}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "HUD 与设置中的低优先级操作。",
+      "html": "<button class=\"ds-btn-ghost\">字幕</button>",
+      "css": ".ds-btn-ghost{height:44px;padding:10px 12px;border:0;border-radius:4px;background:transparent;color:oklch(96% .006 250);font:600 15px/1.3 'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif;transition:background 180ms cubic-bezier(.25,1,.5,1);cursor:pointer}.ds-btn-ghost:hover{background:oklch(24% .052 255)}.ds-btn-ghost:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:2px}"
+    },
+    {
+      "name": "Hotspot Action",
+      "kind": "custom",
+      "refersTo": "hotspot-action",
+      "description": "B 画风的签名组件，定位在真实物件附近。",
+      "html": "<button class=\"ds-hotspot\"><span class=\"ds-hotspot-icon\" aria-hidden=\"true\">◇</span><span>准备姊妹饭</span></button>",
+      "css": ".ds-hotspot{position:relative;min-height:44px;padding:10px 16px 10px 28px;border:0;border-radius:4px;background:oklch(52% .11 210);color:oklch(96% .006 250);font:600 15px/1.3 'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif;box-shadow:none;cursor:pointer;transition:background 180ms cubic-bezier(.25,1,.5,1),transform 180ms cubic-bezier(.25,1,.5,1),box-shadow 180ms cubic-bezier(.25,1,.5,1)}.ds-hotspot-icon{position:absolute;left:-22px;top:0;display:grid;width:44px;height:44px;place-items:center;border:1px dashed oklch(82% .015 245);border-radius:999px;background:oklch(52% .11 210);font-size:20px}.ds-hotspot:hover{background:oklch(48% .11 210);transform:translateY(-1px);box-shadow:0 2px 4px rgb(4 10 20/.28)}.ds-hotspot:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:3px}"
+    },
+    {
+      "name": "Task Panel",
+      "kind": "custom",
+      "refersTo": "task-panel",
+      "description": "左上角的四项以内任务面板。",
+      "html": "<section class=\"ds-task\" aria-labelledby=\"ds-task-title\"><h2 id=\"ds-task-title\">今天要做</h2><ul><li><span aria-hidden=\"true\">○</span>准备姊妹饭</li><li class=\"is-done\"><span aria-hidden=\"true\">✓</span>问问外婆</li></ul></section>",
+      "css": ".ds-task{width:280px;padding:20px;border:1px dashed oklch(48% .074 250);border-radius:4px;background:oklch(24% .052 255);color:oklch(96% .006 250);box-shadow:0 4px 8px rgb(4 10 20/.24);font-family:'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif}.ds-task h2{margin:0 0 12px;color:oklch(61% .19 15);font:600 22px/1.35 inherit}.ds-task ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}.ds-task li{display:flex;gap:10px;align-items:center;font:400 16px/1.45 inherit}.ds-task li.is-done{color:oklch(82% .015 245)}"
+    },
+    {
+      "name": "Dialogue Band",
+      "kind": "custom",
+      "refersTo": "dialogue-band",
+      "description": "底部中央的角色对白与字幕容器。",
+      "html": "<section class=\"ds-dialogue\"><strong>外婆</strong><p>先把今天的姊妹饭准备好。</p></section>",
+      "css": ".ds-dialogue{width:min(960px,calc(100vw - 48px));padding:18px 24px;border-radius:8px;background:oklch(18% .035 255/.96);color:oklch(96% .006 250);box-shadow:0 4px 8px rgb(4 10 20/.24);font-family:'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif}.ds-dialogue strong{display:inline-block;margin-right:16px;color:oklch(72% .09 205);font-size:18px}.ds-dialogue p{display:inline;margin:0;font-size:18px;line-height:1.65}"
+    },
+    {
+      "name": "Cultural Question",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "AI 文化对话中的建议问题。",
+      "html": "<button class=\"ds-question\">这件银簪什么时候会戴？</button>",
+      "css": ".ds-question{min-height:44px;padding:10px 14px;border:0;border-radius:8px;background:oklch(34% .073 257);color:oklch(96% .006 250);font:600 15px/1.4 'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif;text-align:left;cursor:pointer;transition:background 180ms cubic-bezier(.25,1,.5,1)}.ds-question:hover{background:oklch(42% .075 257)}.ds-question:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "text-input",
+      "description": "自由文化问题输入，不承载长篇文本。",
+      "html": "<label class=\"ds-field\"><span>想问外婆什么？</span><input type=\"text\" placeholder=\"输入一个关于眼前物件的问题\"></label>",
+      "css": ".ds-field{display:grid;gap:8px;color:oklch(96% .006 250);font:600 15px/1.3 'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif}.ds-field input{height:48px;padding:12px 14px;border:1px solid oklch(48% .074 250);border-radius:8px;background:oklch(24% .052 255);color:oklch(96% .006 250);font:400 18px/1.4 inherit}.ds-field input::placeholder{color:oklch(72% .014 250)}.ds-field input:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:2px;border-color:transparent}.ds-field input:disabled{background:oklch(20% .025 255);color:oklch(72% .014 250)}"
+    },
+    {
+      "name": "Source Drawer Header",
+      "kind": "nav",
+      "refersTo": "task-panel",
+      "description": "文化来源抽屉的固定标题与审核状态。",
+      "html": "<header class=\"ds-source\"><div><strong>资料来源</strong><span>原型资料 · 待当地复核</span></div><button aria-label=\"关闭\">×</button></header>",
+      "css": ".ds-source{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px;background:oklch(24% .052 255);color:oklch(96% .006 250);font-family:'Source Han Sans SC','Noto Sans SC',system-ui,sans-serif}.ds-source div{display:grid;gap:4px}.ds-source strong{font-size:22px}.ds-source span{color:oklch(75% .13 84);font-size:13px}.ds-source button{display:grid;width:44px;height:44px;place-items:center;border:0;border-radius:4px;background:transparent;color:oklch(96% .006 250);font-size:24px;cursor:pointer}.ds-source button:hover{background:oklch(34% .073 257)}.ds-source button:focus-visible{outline:3px solid oklch(72% .09 205);outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "当代靛蓝织绘（The Indigo Textile Stage）",
+    "overview": "本系统以 B｜织物记忆为唯一视觉基准。画面像一座由靛蓝布片、木楼结构和当代生活共同搭成的横向舞台：人物始终处在可理解的生活空间中，交互热点像缝在场景上的功能标签，但 UI 本身保持现代、清晰、克制。织物是画面的材料语言，不是覆盖所有界面的主题皮肤。",
+    "keyCharacteristics": [
+      "平面分层的 2D 织绘场景，不使用写实 3D 或照片拼贴。",
+      "当代木楼生活空间，而不是模糊的古代苗寨。",
+      "靛蓝主导，茜红负责人物与叙事，河青负责行动与导航。",
+      "UI 贴近场景但不伪装成道具，操作优先于装饰。",
+      "一屏一个主要目标，场景画面始终占据至少 80% 的面积。",
+      "文化纹样必须有来源；不确定时使用无文化指向的基础几何肌理。"
+    ],
+    "rules": [
+      { "name": "The Stage Rule", "body": "所有主场景以 1440×810 作为设计基准，内容安全区为四周 32px。", "section": "components" },
+      { "name": "The Living Present Rule", "body": "每个室内场景至少出现一件自然的当代生活物件，但不得成为视觉噱头。", "section": "components" },
+      { "name": "The Verified Pattern Rule", "body": "服饰、绣片和银饰纹样只有在记录了地区、来源和审核状态后才能成为正式资产。", "section": "components" },
+      { "name": "The 60–25–10–5 Rule", "body": "单屏约 60% 靛蓝与暗部、25% 木色和环境中性、10% 雾白与银光、5% 茜红/河青/赭色焦点。", "section": "colors" },
+      { "name": "The Semantic Accent Rule", "body": "河青表示可以行动，茜红表示人物、服饰或情绪，日光赭表示时间或注意。", "section": "colors" },
+      { "name": "The No Parchment Rule", "body": "禁止用米黄、羊皮纸或卷轴色作为全局页面背景。", "section": "colors" },
+      { "name": "The Two-Family Rule", "body": "全项目只允许一套中文宋体与一套中文黑体。", "section": "typography" },
+      { "name": "The Controls Stay Sans Rule", "body": "所有可以点击、输入或改变状态的文字必须使用黑体。", "section": "typography" },
+      { "name": "The Chinese-First Rule", "body": "界面以简体中文为设计基准，英文只能作为可选翻译。", "section": "typography" },
+      { "name": "The Flat-at-Rest Rule", "body": "按钮和标签静止时无阴影，悬停或键盘聚焦时才允许出现交互抬升。", "section": "elevation" },
+      { "name": "The One Depth Cue Rule", "body": "同一个组件只能通过色阶、边框或阴影中的一种方式表达层级。", "section": "elevation" },
+      { "name": "The No Glass Rule", "body": "禁止默认使用毛玻璃、透明玻璃卡片或霓虹光晕。", "section": "elevation" }
+    ],
+    "dos": [
+      "Do 以 B 图的横向舞台、任务面板、热点和底部对话带为原型布局基准。",
+      "Do 使用 OKLCH 令牌，并逐个验证正文 4.5:1、大字 3:1 的对比度。",
+      "Do 让场景插画承担氛围，让 HTML/CSS UI 承担操作与可访问性。",
+      "Do 保持当代生活痕迹，使传统文化显得正在发生。",
+      "Do 为所有拖拽提供点击替代，为所有声音提供字幕。",
+      "Do 将文化来源、适用地区和审核状态与资产一同管理。",
+      "Do 把织纹限制在服饰、布料和少量过渡材质上。",
+      "Do 在每个屏幕只设置一个明确主行动。"
+    ],
+    "donts": [
+      "Don't 做旅游景区宣传片式的民族奇观陈列。",
+      "Don't 做泛民族风拼贴。",
+      "Don't 采用古风手游式金色描边、卷轴按钮、夸张粒子或宫廷视觉语言。",
+      "Don't 做儿童科普课件。",
+      "Don't 做恋爱养成游戏。",
+      "Don't 直接复制 B 图的英文文案、生成式纹样或疑似不准确的服饰细节。",
+      "Don't 使用 Emoji、写实照片脸、Q 版角色或通用苗族美女素材。",
+      "Don't 在卡片上同时使用 1px 边框和大于 8px 模糊的软阴影。",
+      "Don't 使用大于 16px 的容器圆角、渐变文字、玻璃拟态或霓虹描边。",
+      "Don't 用单侧粗色条装饰卡片和任务项。",
+      "Don't 让装饰纹理降低正文、字幕、焦点环或操作标签的清晰度。",
+      "Don't 将 UI、文字和热点烘焙进场景图。"
+    ]
+  }
+}

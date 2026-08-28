@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>《她的姊妹节》视觉基调样张｜织物记忆</title>
+<style>
+:root{
+  --ink-indigo:#131922;--deep-indigo:#1a2438;--indigo:#2a4a6b;--lake:#2e6b8a;
+  --wood-d:#403733;--wood-m:#897e72;--cloth:#d8ccb4;--light:#c0cccc;
+  --crimson:#8f2d3f;--text-d:#e8e0d0;--text-c:#1a1a18
+}
+*{box-sizing:border-box}
+html{background:var(--ink-indigo)}
+body{margin:0;color:var(--text-d);font-family:"Noto Serif SC","Songti SC",Georgia,serif;background:var(--ink-indigo)}
+/* 织物画框层 */
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply}
+.wrap{max-width:1240px;margin:0 auto;padding:34px 4vw 60px}
+/* 苗锦菱形纹带 */
+.band{height:14px;border-top:2px dashed var(--cloth);border-bottom:2px dashed var(--cloth);
+  background:repeating-linear-gradient(45deg,var(--indigo) 0 9px,var(--deep-indigo) 9px 18px,var(--crimson) 18px 21px,var(--deep-indigo) 21px 30px);opacity:.9}
+header{margin:26px 0 30px}
+.kicker{font-size:12px;letter-spacing:.35em;color:var(--light);opacity:.75}
+h1{font-size:clamp(28px,3.6vw,44px);margin:12px 0 10px;letter-spacing:.06em}
+.sub{font-size:15px;line-height:1.9;color:var(--cloth);opacity:.85;max-width:820px}
+h2{font-size:clamp(20px,2.4vw,28px);margin:46px 0 6px;letter-spacing:.1em}
+h2 small{font-size:13px;color:var(--cloth);opacity:.6;letter-spacing:.2em;margin-left:12px}
+.rule{height:2px;background:none;border:none;border-top:2px dashed rgba(216,204,180,.35);margin:8px 0 22px}
+
+/* 布片面板 */
+.panel{background:var(--deep-indigo);border:2px dashed var(--cloth);border-radius:6px;
+  box-shadow:0 6px 18px rgba(4,6,11,.5);padding:20px 24px;position:relative}
+.panel.light{background:var(--cloth);color:var(--text-c);border-color:var(--indigo)}
+/* 十字缝点（四角） */
+.stitch:after,.stitch:before{content:"";position:absolute;width:9px;height:9px;
+  background:linear-gradient(45deg,transparent 44%,var(--cloth) 44% 56%,transparent 56%),
+             linear-gradient(-45deg,transparent 44%,var(--cloth) 44% 56%,transparent 56%);
+  background-size:100% 100%}
+.stitch:before{top:6px;left:6px}.stitch:after{bottom:6px;right:6px}
+
+/* 交互热点（六态演示） */
+.hotrow{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hot{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:10px 18px;border-radius:999px;
+  background:var(--deep-indigo);border:2px dashed var(--cloth);color:var(--text-d);
+  font-family:inherit;font-size:15px;cursor:pointer;transition:.18s;position:relative}
+.hot .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--indigo);flex:none}
+.hot:hover{background:var(--indigo);transform:translateY(-2px)}
+.hot:focus-visible{outline:2px solid var(--light);outline-offset:3px}
+.hot.done{border-style:solid;border-color:var(--wood-m);opacity:.75;cursor:default}
+.hot.done .ic{background:var(--wood-m)}
+.hot.disabled{opacity:.4;cursor:not-allowed}
+.hot.crimson{border-color:var(--crimson)}
+.hot.crimson .ic{background:var(--crimson)}
+.stateLab{font-size:12px;color:var(--light);opacity:.7;width:100%;margin-top:4px;font-family:"Noto Sans SC",sans-serif}
+
+/* 对话框样张 */
+.dialogue{max-width:860px}
+.nameTag{display:inline-block;background:var(--crimson);color:#fff;font-size:13px;letter-spacing:.25em;
+  padding:5px 14px 4px;border:1px dashed rgba(255,255,255,.55);margin-bottom:-1px}
+.nameTag.src{background:var(--lake)}
+.dline{font-size:17px;line-height:2;color:var(--text-d)}
+.tassel{display:inline-flex;gap:3px;margin-left:10px;vertical-align:middle}
+.tassel i{width:2px;height:12px;background:var(--cloth);display:block}
+.tassel i:nth-child(2){height:15px}.tassel i:nth-child(3){height:10px}
+.continue{font-size:12px;color:var(--light);opacity:.7;margin-top:10px;font-family:"Noto Sans SC",sans-serif}
+
+/* 色板 */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px}
+.sw{border:2px dashed rgba(216,204,180,.5);border-radius:6px;overflow:hidden;background:var(--deep-indigo)}
+.sw .chip{height:54px}
+.sw .lab{padding:8px 10px;font-size:12px;line-height:1.6;font-family:"Noto Sans SC",sans-serif;color:var(--text-d)}
+.sw .lab b{display:block;font-size:13px;letter-spacing:.08em}
+
+/* 织物细节库 */
+.details{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.dt{padding:16px;font-size:13px;line-height:1.8;font-family:"Noto Sans SC",sans-serif;color:var(--text-d)}
+.dt b{display:block;font-family:"Noto Serif SC",serif;font-size:15px;margin-bottom:6px;letter-spacing:.1em}
+.crossDots{height:34px;background-image:radial-gradient(var(--cloth) 1.3px,transparent 1.4px);background-size:14px 14px;opacity:.7;margin-bottom:10px}
+.crack{height:34px;border:1px solid rgba(216,204,180,.4);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='34'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.05 0.12' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.8 0 0 0 0 0.7 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='120' height='34' filter='url(%23c)'/%3E%3C/svg%3E");margin-bottom:10px}
+.diamond{height:34px;background:repeating-linear-gradient(45deg,var(--indigo) 0 8px,var(--deep-indigo) 8px 16px,var(--crimson) 16px 19px,var(--deep-indigo) 19px 28px);margin-bottom:10px;border:1px dashed rgba(216,204,180,.4)}
+
+/* 参考图 */
+.refbox{display:grid;grid-template-columns:minmax(280px,1.4fr) 1fr;gap:24px;align-items:start}
+.refbox img{width:100%;border:2px dashed var(--cloth);border-radius:6px;box-shadow:0 10px 30px rgba(4,6,11,.55)}
+.refbox .panel{font-size:14px;line-height:2;font-family:"Noto Sans SC",sans-serif}
+.refbox .panel b{font-family:"Noto Serif SC",serif;letter-spacing:.1em}
+@media(max-width:900px){.refbox{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">视觉基调定稿样张 · 织物记忆 TEXTILE MEMORY</div>
+  <h1>《她的姊妹节》视觉基调</h1>
+  <div class="sub">基准参考：assets/ui-directions/B-textile-memory.png。本页本身即基调的可视化验证——页面所见的深靛织物画框、布片面板、缝线细节，全部为游戏将采用的 CSS 实现。配《她的姊妹节-视觉基调.md》使用。</div>
+</header>
+<div class="band"></div>
+
+<h2>一、织物组件活样张 <small>全部 CSS 实现，即开发即所得</small></h2>
+<hr class="rule"/>
+
+<div class="panel stitch" style="margin-bottom:20px">
+  <div class="hotrow">
+    <button class="hot"><span class="ic">灶</span>厨房 · 做姊妹饭</button>
+    <button class="hot crimson"><span class="ic">衣</span>换装区 · 穿盛装</button>
+    <button class="hot"><span class="ic">婆</span>外婆 · 文化对话</button>
+    <span class="hot done"><span class="ic">✓</span>清晨卧房 · 起身<span class="stateLab" style="width:auto;margin:0 0 0 8px;display:inline">已完成</span></span>
+    <span class="hot disabled"><span class="ic">门</span>出门赴节<span class="stateLab" style="width:auto;margin:0 0 0 8px;display:inline">任务未完成</span></span>
+  </div>
+  <div class="stateLab">热点六态：默认（缝线米白）· 悬停（靛蓝填充+上浮，鼠标移上去试）· 键盘焦点（Tab 试）· 按下 · 已完成（✓+变灰+文字）· 不可用（降透明）。全部 ≥44px，状态不单靠颜色。</div>
+</div>
+
+<div class="panel dialogue stitch" style="margin-bottom:20px">
+  <span class="nameTag">阿 婆</span>
+  <span class="nameTag src">来源 · 台江县人民政府</span>
+  <div class="dline">姊妹节快到了。今年的姊妹饭，你来蒸。——枫叶染黑，黄饭花染黄，山里的颜色，都收在这碗饭里。</div>
+  <div class="continue">点击或按空格继续 ▸　（AI 回答会带「来源」织带标签，可展开资料条目）</div>
+  <span class="tassel"><i></i><i></i><i></i></span>
+</div>
+
+<div class="panel light stitch" style="max-width:520px">
+  <div style="font-family:'Noto Serif SC',serif;font-size:15px;letter-spacing:.1em;margin-bottom:10px">今日准备</div>
+  <div style="font-size:14px;line-height:2.1;font-family:'Noto Sans SC',sans-serif">
+    <span style="text-decoration:line-through;opacity:.65">✓ 起身 · 迎接清晨</span><br/>
+    ○ 蒸一篮姊妹饭<br/>
+    ○ 穿上节日盛装<br/>
+    ○ 和外婆说说话
+  </div>
+</div>
+
+<h2>二、色彩系统 <small>从参考图聚类实测</small></h2>
+<hr class="rule"/>
+<div class="swatches">
+  <div class="sw"><div class="chip" style="background:#131922"></div><div class="lab"><b>墨靛 #131922</b>主背景基调、画框</div></div>
+  <div class="sw"><div class="chip" style="background:#1a2438"></div><div class="lab"><b>深靛 #1A2438</b>布片面板深底</div></div>
+  <div class="sw"><div class="chip" style="background:#2a4a6b"></div><div class="lab"><b>靛蓝 #2A4A6B</b>交互主色</div></div>
+  <div class="sw"><div class="chip" style="background:#2e6b8a"></div><div class="lab"><b>湖靛 #2E6B8A</b>次级交互、图标</div></div>
+  <div class="sw"><div class="chip" style="background:#403733"></div><div class="lab"><b>深木褐 #403733</b>木构环境</div></div>
+  <div class="sw"><div class="chip" style="background:#897e72"></div><div class="lab"><b>暖木灰 #897E72</b>麻布中间调</div></div>
+  <div class="sw"><div class="chip" style="background:#d8ccb4"></div><div class="lab"><b>米白布 #D8CCB4</b>亮部布片、文字底</div></div>
+  <div class="sw"><div class="chip" style="background:#c0cccc"></div><div class="lab"><b>天光灰蓝 #C0CCCC</b>门窗光亮层</div></div>
+  <div class="sw"><div class="chip" style="background:#8f2d3f"></div><div class="lab"><b>绛红 #8F2D3F</b>绣线点缀（小面积）</div></div>
+  <div class="sw"><div class="chip" style="background:#e8e0d0"></div><div class="lab"><b>浅布字 #E8E0D0</b>深底正文 ≥12:1</div></div>
+</div>
+<p style="font-size:13px;line-height:2;color:var(--cloth);opacity:.75;font-family:'Noto Sans SC',sans-serif">纪律：深靛主导画面六成；绛红是绣线不是涂料；颜色不单独承载信息（姊妹饭五色同时配纹样与名称）；不做全幅米黄仿古底。</p>
+
+<h2>三、织物细节库 <small>缝线 · 十字绣点 · 冰裂纹 · 菱形纹带</small></h2>
+<hr class="rule"/>
+<div class="details">
+  <div class="panel dt"><b>手缝线迹</b>面板与热点的虚线描边（1.5–2px 米白/靛蓝），即本页所有组件的边。</div>
+  <div class="panel dt"><b>苗绣十字点</b><div class="crossDots"></div>记忆类组件四角与底纹，radial-gradient 阵列。</div>
+  <div class="panel dt"><b>蜡染冰裂纹</b><div class="crack"></div>「记忆卡」「文化手记」的背景纹理，SVG 湍流噪声。</div>
+  <div class="panel dt"><b>苗锦菱形纹带</b><div class="diamond"></div>任务条与进度装饰边，repeating-linear-gradient。</div>
+</div>
+
+<h2>四、基准参考 <small>为什么是这一张</small></h2>
+<hr class="rule"/>
+<div class="refbox">
+  <img src="../assets/ui-directions/B-textile-memory.png" alt="织物记忆参考图" />
+  <div class="panel stitch">
+    <b>这张图确立的四件事</b><br/>
+    ① 舞台式三层结构：深靛织物画框 → 绘本场景 → 缝在上面的布片 UI；<br/>
+    ② 深靛主导 + 暖木过渡 + 光源处米白/天光，绛红点缀的完整色板；<br/>
+    ③ 热点=布片胶囊（图形+文字），任务=米白布面小票，对话=织带名牌+流苏；<br/>
+    ④ 民族元素以「织物转译」进入 UI：缝线、绣点、织带、菱形纹，而非纹样贴图堆砌。<br/><br/>
+    <b>说明</b>：此前 styles-v2 目录的三张画风探索样张（水彩/平涂/厚涂）已被本方向取代，留作氛围参考。
+  </div>
+</div>
+
+<div class="band" style="margin-top:46px"></div>
+<p style="text-align:center;font-size:12px;letter-spacing:.3em;color:var(--cloth);opacity:.5;margin-top:18px;font-family:'Noto Sans SC',sans-serif">一 切 UI 皆 织 物 · 一 切 色 彩 皆 靛 染 · 一 切 情 绪 皆 记 忆</p>
+</div>
+</body>
+</html>
