@@ -1,0 +1,9 @@
+# 运行时用不到的文件，不部署（保留：index.html / demo.html / assets / api / src / *.json）
+docs/
+archive/
+old/
+scripts/
+dev-server.mjs
+演示视频.mp4
+*.mp4
+*:Zone.Identifier
