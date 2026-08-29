@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101b2c">
+  <link rel="preload" as="image" href="assets/scene/封面背景-v1.webp" type="image/webp">
   <title>她的姊妹节 · 交互 Demo</title>
   <style>
     :root {
@@ -135,9 +136,35 @@
     #npcGrandma { left: 63%; top: 42%; }
     #npcMom { left: 39%; top: 44%; height: 31%; }
 
-    /* 室外站位：阿月招手处偏左前景；阿禾（赠饭对象）偏右前景 */
-    #npcAyue { left: 30%; top: 46%; height: 30%; background: color-mix(in oklch, var(--river-cyan) 45%, var(--indigo-ink)); }
-    #npcAhe { left: 66%; top: 47%; height: 30%; background: color-mix(in oklch, var(--madder-red) 45%, var(--indigo-ink)); }
+    /* NPC 立绘：真实图在底图就绪前隐藏，锚点盒保持气泡定位职责 */
+    .npc-placeholder .char-in { display: none; }
+
+    .scene.bg-ready .npc-placeholder .char-in {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: bottom;
+    }
+
+    .scene.bg-ready .npc-placeholder { background: transparent; border-color: transparent; }
+
+    /* 室外立绘与女主盛装出场同样等底图就绪 */
+    #charHeroineOutdoor { display: none; }
+
+    #outdoorScene.bg-ready #charHeroineOutdoor { display: block; }
+
+    /* 室外站位（按 节日场地-v3 地形标定脚点：中部人群石滩与右下卵石带是干地，
+       左下前景与底部边缘是水）：阿月并入人群岸（中景透视缩小）；阿禾、女主在右下卵石带。 */
+    #npcAyue { left: 19%; top: 47%; width: 6.5%; height: 19%; }
+    #npcAhe { left: 79%; top: 47%; width: 8%; height: 30%; }
+
+    #charHeroineOutdoor { left: 57%; height: 50%; bottom: 19%; }
+
+    #spotSong { left: 30%; top: 34%; }
+    #spotGift { left: 47%; top: 46%; right: auto; }
 
     /* 资产到货后启用：立绘贴图（静态站位，无行走/动画） */
     .char {
@@ -148,6 +175,12 @@
       object-position: bottom;
       pointer-events: none;
       filter: drop-shadow(0 6px 10px rgb(4 10 20 / 30%));
+    }
+
+    /* 女主位于前景，需比烘焙在 A3 中景里的坐姿外婆略大，脚底落在堂屋地面。 */
+    #charHeroine {
+      height: 58%;
+      bottom: 3.5%;
     }
 
     /* 场景背景挂载点：A2/A3/A8 资产到货后由 JS 写入 background-image，不硬编码等待资产 */
@@ -167,16 +200,16 @@
     .scene.bg-ready #npcGrandma { left: 66%; top: 38%; width: 10%; height: 38%; }
 
     /* 轻量物件标记固定站位（A3 与占位 SVG 同一房间布局，两态通用；容器在舞台层） */
-    #objHairpin { left: 74%; top: 46%; }
-    #objEmbroidery { left: 20%; top: 58%; }
-    #objBasket { left: 80%; top: 66%; }
-    #objFirepit { left: 55%; top: 58%; }
-    #objSourjar { left: 34%; top: 63%; }
+    #objHairpin { left: 33.07%; top: 46.33%; }
+    #objEmbroidery { left: 25.48%; top: 63.76%; }
+    #objBasket { left: 83.37%; top: 74.60%; }
+    #objFirepit { left: 60.41%; top: 63.44%; }
+    #objSourjar { left: 36.90%; top: 70.88%; }
 
     /* 底图就绪后主热点按 A3 真实构图就位（bg-ready 由 JS 同步到容器 #indoorHotspots 上） */
-    #indoorHotspots.bg-ready #spotWardrobe { left: 8%; top: 60%; }
-    #indoorHotspots.bg-ready #spotKitchen { left: 50%; right: auto; top: 40%; }
-    #indoorHotspots.bg-ready #spotDoor { left: 79%; top: 28%; }
+    #indoorHotspots.bg-ready #spotWardrobe { left: 21%; top: 35%; }
+    #indoorHotspots.bg-ready #spotKitchen { left: 55%; right: auto; top: 38%; }
+    #indoorHotspots.bg-ready #spotDoor { left: 72%; top: 35%; }
 
     /* 厨房近景（A4）作为做饭抽屉的实拍底 */
     .process-visual.kitchen-photo { background-size: cover; background-position: center 72%; }
@@ -425,6 +458,7 @@
       padding: 0;
       background: transparent;
       border: 0;
+      transform: translate(-50%, -50%);
     }
 
     .object-marker .disc {
@@ -467,8 +501,7 @@
     .object-marker:hover .marker-label, .object-marker:focus-visible .marker-label { opacity: 1; }
 
     .outdoor-hotspot { display: none; }
-    #spotSong { left: 29%; top: 29%; }
-    #spotGift { right: 23%; top: 49%; }
+    /* 室外热点定位统一在 bg-ready 规则块（约 170 行处），此处不再重复设置 */
 
     .dialogue-band {
       position: absolute;
@@ -631,6 +664,23 @@
     .speech-bubble.ai-flip .bubble-ai { bottom: auto; top: calc(100% + 14px); }
 
     .bubble-ai[hidden] { display: none; }
+
+    /* 选择文化问题时只显示问题面板，不保留一层空的 NPC 提示气泡。 */
+    .speech-bubble.question-picker {
+      width: 0;
+      max-width: none;
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .speech-bubble.question-picker::after,
+    .speech-bubble.question-picker > .bubble-text,
+    .speech-bubble.question-picker > .bubble-hint,
+    .speech-bubble.question-picker > .bubble-source { display: none; }
+
+    .speech-bubble.question-picker .bubble-ai { left: 60px; }
 
     .bubble-ai .ai-q {
       min-height: 44px;
@@ -812,27 +862,6 @@
       border-radius: 4px;
     }
 
-    .rice-bowl {
-      position: relative;
-      width: 150px;
-      height: 70px;
-      background: var(--wood-mid);
-      border-radius: 6px 6px 75px 75px;
-      border-top: 8px solid var(--wood-dark);
-    }
-
-    .rice-bowl::before {
-      content: "";
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      top: -18px;
-      height: 34px;
-      background: var(--rice-color, #384b79);
-      border-radius: 50%;
-      box-shadow: inset 0 4px rgb(255 255 255 / 10%);
-    }
-
     .steam {
       position: absolute;
       width: 12px;
@@ -856,15 +885,107 @@
       100% { transform: translateY(-20px) translateX(6px) scaleY(1.1); opacity: 0; }
     }
 
+    /* ---------- 姊妹饭舞台（复用 .process-visual 容器，升级为真实物件） ---------- */
+    .process-visual.meal { display: flex; align-items: flex-end; justify-content: center; gap: 7%; }
+
+    .process-visual.meal .prop { height: 76%; object-fit: contain; position: relative; z-index: 2; }
+
+    .process-visual.meal .prop.tall { height: 88%; }
+
+    /* 染色米团：multiply 叠在米盆上（代码 tint，不占生图额度） */
+    .rice-tint {
+      position: absolute; z-index: 3; width: 30px; height: 14px; border-radius: 50%;
+      mix-blend-mode: multiply; opacity: .82; filter: blur(1.2px);
+    }
+
+    /* 浸泡阶段：颜色刚渗入水里，比拌色完成后更淡更晕 */
+    .rice-tint.soak { opacity: .35; filter: blur(2.4px); }
+
+    /* 竹篮三态切帧（C6 拼图 1672×941，三帧各 557 宽） */
+    .basket-frames {
+      position: relative; z-index: 2; width: 128px; aspect-ratio: 557 / 941; overflow: hidden;
+    }
+
+    .basket-frames img {
+      position: absolute; top: 0; left: 0; width: 300%; height: 100%; object-fit: cover;
+      transition: left 360ms var(--ease-out);
+    }
+
+    .basket-frames[data-frame="0"] img { left: 0; }
+    .basket-frames[data-frame="1"] img { left: -100%; }
+    .basket-frames[data-frame="2"] img { left: -200%; }
+
+    /* 染料卡：色料碟切帧 + 名称 + 菱形纹角标（三重编码） */
+    .dye-card { min-height: 84px; }
+
+    .dye-card .dish {
+      flex: 0 0 auto; width: 58px; height: 58px; border-radius: 6px;
+      object-fit: contain;
+      background:
+        repeating-conic-gradient(rgb(255 255 255 / 5%) 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+      border: 1px solid rgb(255 255 255 / 18%);
+    }
+
+    .dye-card .diamond-tag {
+      display: inline-block; width: 11px; height: 11px; margin-right: 6px;
+      transform: rotate(45deg); border: 2px solid currentColor; vertical-align: -1px;
+    }
+
+    /* 心情色卡（C8 代码绘制） */
+    .mood-card .swatch { border-radius: 8px; }
+
     .outfit-preview {
       position: relative;
-      height: 240px;
+      height: 260px;
       display: grid;
       place-items: center;
       margin-bottom: 18px;
       background: var(--indigo-night);
       border-radius: 4px;
+      overflow: hidden;
     }
+
+    /* 穿戴预览：每一步都是同一 1024×1024 画布的完整状态图 */
+    .outfit-stack {
+      position: relative;
+      width: min(100%, 260px);
+      height: 100%;
+    }
+
+    .outfit-stack img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .wear-card {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      background: var(--indigo-night);
+      border: 1px solid rgb(255 255 255 / 14%);
+      border-radius: 4px;
+    }
+
+    .wear-card img {
+      width: 92px;
+      height: 92px;
+      object-fit: contain;
+      background:
+        repeating-conic-gradient(rgb(255 255 255 / 5%) 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+      border-radius: 4px;
+    }
+
+    .wear-card strong { display: block; font-family: var(--serif); font-size: 18px; }
+
+    .wear-card small { display: block; margin-top: 5px; color: var(--muted-text); font-size: 13px; line-height: 1.5; }
+
+    .wear-card .wear-src { font-size: 11.5px; opacity: .8; }
 
     .paper-doll { position: relative; width: 112px; height: 210px; }
     .paper-doll .head { position: absolute; left: 40px; top: 2px; width: 34px; height: 40px; background: #b9836d; border-radius: 48% 48% 44% 44%; }
@@ -940,10 +1061,22 @@
       position: absolute;
       z-index: 50;
       inset: 0;
-      display: grid;
-      grid-template-columns: 1.08fr .92fr;
       background: var(--indigo-night);
       transition: opacity 450ms ease, visibility 450ms ease;
+    }
+
+    .intro::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg,
+        color-mix(in oklch, var(--indigo-night) 97%, transparent) 0%,
+        color-mix(in oklch, var(--indigo-night) 90%, transparent) 34%,
+        color-mix(in oklch, var(--indigo-night) 58%, transparent) 56%,
+        color-mix(in oklch, var(--indigo-night) 12%, transparent) 78%,
+        transparent 100%);
     }
 
     .intro.closed { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -951,6 +1084,8 @@
     .intro-copy {
       position: relative;
       z-index: 2;
+      width: min(56%, 760px);
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -984,21 +1119,21 @@
       line-height: 1.8;
     }
 
-    .intro-meta {
-      display: flex;
-      gap: 18px;
-      margin-top: 24px;
-      color: var(--sun-ochre);
-      font-size: 13px;
-    }
-
     .intro-art {
-      position: relative;
+      position: absolute;
+      z-index: 0;
+      inset: 0;
       overflow: hidden;
       background: var(--indigo-cloth);
     }
 
-    .intro-art svg { width: 100%; height: 100%; display: block; }
+    .intro-art img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
 
     .start-button {
       align-self: flex-start;
@@ -1293,9 +1428,11 @@
           </g>
         </svg>
         <div class="texture-overlay"></div>
-        <!-- NPC 占位色块：立绘资产（B13 阿月 / B14 阿禾）到货后替换为 <img class="char">，气泡锚点选择器不变 -->
-        <div class="npc-placeholder" id="npcAyue" aria-hidden="true"><span>阿月 · 占位</span></div>
-        <div class="npc-placeholder npc-low" id="npcAhe" aria-hidden="true"><span>阿禾 · 占位</span></div>
+        <!-- NPC 立绘（B13 阿月 / B14 阿禾）：容器保持为气泡锚点，底图就绪后显示立绘 -->
+        <div class="npc-placeholder" id="npcAyue" aria-hidden="true"><img class="char-in" src="assets/char/阿月-招手-v1.webp" alt="阿月"></div>
+        <div class="npc-placeholder npc-low" id="npcAhe" aria-hidden="true"><img class="char-in" src="assets/char/阿禾-侧背影-v1.webp" alt="阿禾"></div>
+        <!-- 女主盛装出场（S4 换装结果延续至室外；能出门必已换好盛装） -->
+        <img class="char char-in" id="charHeroineOutdoor" src="assets/char/女主盛装着装-v3.webp" alt="阿岚的盛装立绘">
       </section>
 
       <header class="topbar">
@@ -1318,9 +1455,9 @@
       </aside>
 
       <div id="indoorHotspots">
-        <button class="hotspot point-left outfit" id="spotWardrobe" type="button" data-action="outfit"><span class="spot-icon"><svg><use href="#i-shirt"/></svg></span><span>挑选盛装</span></button>
-        <button class="hotspot point-right" id="spotKitchen" type="button" data-action="meal"><span class="spot-icon"><svg><use href="#i-pot"/></svg></span><span>制作姊妹饭</span></button>
-        <button class="hotspot point-down" id="spotDoor" type="button" data-action="door" disabled><span class="spot-icon"><svg><use href="#i-door"/></svg></span><span>还不能出门</span></button>
+        <button class="hotspot point-down outfit" id="spotWardrobe" type="button" data-action="outfit"><span class="spot-icon"><svg><use href="#i-shirt"/></svg></span><span>挑选盛装</span></button>
+        <button class="hotspot point-down" id="spotKitchen" type="button" data-action="meal"><span class="spot-icon"><svg><use href="#i-pot"/></svg></span><span>制作姊妹饭</span></button>
+        <button class="hotspot point-right" id="spotDoor" type="button" data-action="door" disabled><span class="spot-icon"><svg><use href="#i-door"/></svg></span><span>还不能出门</span></button>
       </div>
 
       <!-- 轻量物件标记：5 个文化物件独立可点（生图清单 A3/C-2），外婆作答；不计入主热点上限 -->
@@ -1365,25 +1502,10 @@
           <p class="eyebrow">一段发生在当代施洞的互动故事</p>
           <h1 id="gameTitle">她的<br>姊妹节</h1>
           <p class="intro-subtitle">陪阿岚准备姊妹饭、穿好节日盛装，再沿清水江走进她第一次独自参加的姊妹节。</p>
-          <div class="intro-meta"><span>约 5–8 分钟</span><span>键盘与触摸可用</span><span>无失败状态</span></div>
           <button class="start-button" id="startButton" type="button">从清晨开始</button>
         </div>
         <div class="intro-art" aria-hidden="true">
-          <svg viewBox="0 0 700 810" preserveAspectRatio="xMidYMid slice">
-            <rect width="700" height="810" fill="#2d4368"/>
-            <path d="M0 150h700M0 405h700M160 0v810M500 0v810" stroke="#dce6ed" stroke-opacity=".07" stroke-width="3"/>
-            <path d="M100 70 310 280 100 490-110 280Zm480 280 190 190-190 190-190-190Z" fill="none" stroke="#dce6ed" stroke-opacity=".1" stroke-width="42"/>
-            <circle cx="360" cy="254" r="75" fill="#b97f68"/>
-            <path d="M286 240c5-92 150-103 157 6-51-27-105-29-157-6Z" fill="#172035"/>
-            <path d="M307 320h108l65 211H243Z" fill="#263b60"/>
-            <path d="M275 347 171 512M443 347l96 152" stroke="#b97f68" stroke-width="32" stroke-linecap="round"/>
-            <path d="M265 520h197l66 290H197Z" fill="#314a76"/>
-            <path d="M303 526h122v205H303Z" fill="#a53f57"/>
-            <path d="M288 569h151M273 629h184M250 696h230" stroke="#d9e1e7" stroke-opacity=".62" stroke-width="9"/>
-            <path d="M309 330c31 55 91 55 121 0" fill="none" stroke="#cbd4d9" stroke-width="12" stroke-dasharray="5 14"/>
-            <circle cx="173" cy="514" r="46" fill="#bc8947"/>
-            <path d="M141 514h64M173 482v64" stroke="#e0bd70" stroke-width="8"/>
-          </svg>
+          <img src="assets/scene/封面背景-v1.webp" alt="" width="1672" height="941" fetchpriority="high">
         </div>
       </section>
 
@@ -1423,13 +1545,18 @@
         scene: "indoor",
         indoor: { meal: false, outfit: false, culture: false },
         outdoor: { song: false, gift: false },
-        mealColor: "靛蓝与草木紫",
-        mealColorHex: "#384b79",
-        outfit: "靛蓝短衣与百褶裙",
-        outfitHex: "#354874",
-        silver: "银簪与胸前银饰",
+        mealColors: [],
+        mealColor: "还没有选染料",
+        mealColorHex: "#d8ccb4",
+        moodColor: "",
+        moodLine: "",
+        outfit: "还没有穿上盛装",
+        outfitLayers: [],
+        silver: "未佩戴",
         question: "还没有问",
         intent: "把祝福送给朋友",
+        giftIntent: "",
+        giftIntentNote: "",
         subtitles: true,
         sound: false,
         reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -1437,10 +1564,16 @@
 
       let state = initialState();
       let mealStep = 0;
+      let mealCooked = false;
+      let mealFrame = 0;
+      let mealCookSteps = [];
       let outfitStep = 0;
       let songStep = 0;
       let activeTrigger = null;
       let toastTimer = null;
+      const SONG_AUDIO_SRC = "assets/audio/Riverside-Sisters-Bloom-30s.wav";
+      const songAudio = new Audio(SONG_AUDIO_SRC);
+      songAudio.preload = "metadata";
 
       const $ = (selector) => document.querySelector(selector);
       const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -1475,15 +1608,19 @@
         return String(value).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[char]);
       }
 
+      function grandmaReply(text) {
+        const value = String(text ?? "").trim();
+        return /^阿妹(?:[，,、：:\s]|$)/.test(value) ? value : `阿妹，${value}`;
+      }
+
       /* ---------- 对话双通道（DESIGN.md：Speech Bubble / Dialogue Band 分工与互斥） ---------- */
 
       /* NPC 注册表：key → 当前场景内的固定锚点（立绘元素或占位色块）。
          资产到货后，只需把 anchor 换成立绘节点的选择器，气泡逻辑不用动。 */
       const NPCS = {
-        外婆: { scene: "indoor", anchor: "#npcGrandma", tail: 26 },
+        外婆: { scene: "indoor", anchor: "#npcGrandma", tail: 26, lift: 18 },
         妈妈: { scene: "indoor", anchor: "#npcMom", tail: 26 },
-        阿月: { scene: "outdoor", anchor: "#npcAyue", tail: 24 },
-        阿禾: { scene: "outdoor", anchor: "#npcAhe", tail: 24 }
+        阿月: { scene: "outdoor", anchor: "#npcAyue", tail: 24 }
       };
 
       const bubble = $("#speechBubble");
@@ -1493,19 +1630,20 @@
 
       /* 六态之一：hidden（两个通道都不可见，供转场/换页使用） */
       function hideBoth() {
-        bubble.classList.remove("enter", "shown", "leaving", "thinking");
+        bubble.classList.remove("enter", "shown", "leaving", "thinking", "question-picker");
         bubble.hidden = true;
         bubbleSource.hidden = true;
         dialogueBand.hidden = true;
       }
 
-      /* 旁白 / 内心独白 / 无同屏说话对象 → Dialogue Band（默认通道） */
+      /* 旁白/内心独白 → Dialogue Band（默认通道）。说话人统一标「阿岚」：
+         本作所有通栏文本都是她的第一人称视角，标"旁白"会与角色割裂。 */
       function narrate(text) {
         bubble.classList.remove("enter", "shown", "leaving", "thinking");
         bubble.hidden = true;
         bubbleSource.hidden = true;
         dialogueBand.hidden = !state.subtitles;
-        speaker.textContent = "旁白";
+        speaker.textContent = "阿岚";
         dialogueText.textContent = text;
       }
 
@@ -1524,7 +1662,7 @@
         /* 气泡定位：头顶偏上方；尾巴水平位置随锚点局部坐标（--tail-x） */
         const anchorCx = (box.left + box.width / 2 - stageBox.left) * (stageRect.w / stageBox.width);
         const anchorTop = (box.top - stageBox.top) * (stageRect.h / stageBox.height);
-        const lift = options.lift ?? (box.height * (stageRect.h / stageBox.height)) + 14;
+        const lift = options.lift ?? npc.lift ?? (box.height * (stageRect.h / stageBox.height)) + 14;
 
         bubble.style.left = `${Math.round(Math.min(Math.max(anchorCx - 60, 16), stageRect.w - 336))}px`;
         const top = Math.round(Math.max(anchorTop - lift - 86, 96));
@@ -1532,7 +1670,7 @@
         bubble.classList.toggle("ai-flip", top < 300); /* 顶部空间不足时问答层翻到气泡下方 */
         bubble.style.setProperty("--tail-x", `${npc.tail}px`);
 
-        bubble.classList.remove("enter", "shown", "leaving", "thinking");
+        bubble.classList.remove("enter", "shown", "leaving", "thinking", "question-picker");
         clearTimeout(bubble._leaveTimer);
         bubble.hidden = false;
         bubble.classList.add("enter");
@@ -1549,6 +1687,7 @@
         bubble._options = options;
         bubble._npc = name;
         bubble._fallback = options.fallback ?? null;
+        bubble._scene = state.scene; /* 记录触发场景：气泡延时兜底只在同一场景生效，防止漏到下一幕 */
       }
 
       function bubbleAdvance() {
@@ -1557,7 +1696,9 @@
         if (bubble._index < lines.length - 1) {
           bubble._index += 1;
           bubbleText.textContent = lines[bubble._index];
-          bubbleHint.textContent = `点击继续（${bubble._index + 1}/${lines.length}）`;
+          const atLast = bubble._index === lines.length - 1;
+          bubbleHint.textContent = atLast ? "点击收起" : `点击继续（${bubble._index + 1}/${lines.length}）`;
+          if (bubble._index > 0) bubbleSource.hidden = true; /* 来源织带只属于回答页，翻页后隐藏 */
           return;
         }
         bubble.classList.add("leaving");
@@ -1569,19 +1710,28 @@
           bubble.hidden = true;
           bubbleSource.hidden = true;
           closeBubbleAi();
-          if (bubble._fallback) narrate(bubble._fallback); /* 气泡说完把频道交回通栏，避免画面无字幕 */
+          /* 气泡说完把频道交回通栏，避免画面无字幕；但仅当仍在触发时的场景，防止兜底旁白漏到下一幕 */
+          if (bubble._fallback && bubble._scene === state.scene) narrate(bubble._fallback);
           if (typeof bubble._options?.onDone === "function") bubble._options.onDone();
         }, state.reducedMotion ? 0 : 170);
       }
 
       bubble.addEventListener("click", bubbleAdvance);
+      /* 场景内任意点击都会让气泡让路（点气泡本身仍是推进/收起；抽屉打开时不重复触发），
+         避免"外婆回复后气泡一直挡着参加节日/热点"的情况。 */
+      stage.addEventListener("click", (event) => {
+        if (bubble.hidden || !bubble.classList.contains("shown")) return;
+        if (bubble.contains(event.target)) return;
+        if (drawer.contains(event.target) || drawerBackdrop.contains(event.target)) return;
+        bubbleAdvance();
+      }, true);
       /* 来源织带：打开当前物件的知识来源抽屉（原型资料 · 待当地复核），不触发气泡推进 */
       bubbleSource.addEventListener("click", (event) => {
         event.stopPropagation();
         const obj = bubble._object;
         const links = obj?.sources ?? Object.values(SOURCE_LINKS);
         setDrawer("文化来源", `「${obj?.name ?? "文化问答"}」的依据`, `
-          <p class="drawer-copy">外婆的回答只来自审核资料条目。以下条目当前为<b>原型资料 · 待当地复核</b>状态，正式发布前须由施洞当地文化工作者复核（PRD §9/§20）。</p>
+          <p class="drawer-copy">外婆的回答只来自下面这些资料。<b>原型资料 · 待当地复核</b>（PRD §9）。</p>
           <ul class="settings-list" style="margin-top:14px">
             ${links.map((link) => `<li class="setting-row"><span style="font-size:14px">${escapeHtml(link.org)} · ${escapeHtml(link.title)}</span><a class="bubble-source" style="position:static" href="${link.url}" target="_blank" rel="noopener">打开</a></li>`).join("")}
           </ul>
@@ -1650,6 +1800,7 @@
       }
 
       function closeDrawer() {
+        if (!songAudio.paused) songAudio.pause();
         drawer.classList.remove("open");
         drawerBackdrop.classList.remove("open");
         drawer.setAttribute("aria-hidden", "true");
@@ -1660,98 +1811,227 @@
         return `<div class="stepper" aria-label="进度">${labels.map((label, index) => `<div class="step ${index < current ? "done" : ""} ${index === current ? "active" : ""}">${index + 1}. ${label}</div>`).join("")}</div>`;
       }
 
+      /* 姊妹饭四步（剧情文本 S3；工序交互沿用 demo 原有 toast 顺序守卫，不改机制）。
+         物件资产：C1 米盆 / C2 色料碟三连（切帧）/ C3 拌色钵 / C4 木甑 / C6 竹篮三态（切帧）。 */
+      /* 五色染材（姊妹饭真实工艺口径：红·姊妹花，紫·紫草，黄·密蒙花/黄姜，黑·枫香树叶，白·本色不染）。
+         染材称谓为原型占位，正式版需施洞当地核验。 */
+      const MEAL_DYES = [
+        ["红色", "姊妹花", "#a63c46"],
+        ["紫色", "紫草", "#6b4a7a"],
+        ["黄色", "密蒙花（黄饭花）", "#c69745"],
+        ["黑色", "枫香树叶", "#26251f"],
+        ["白色", "本色糯米", "#f0e8d8"]
+      ];
+      const MEAL_MOODS = [
+        ["沉静的河青", "#2e6b8a", "像江面没起风的时候。就它了。"],
+        ["热烈的茜红", "#8f2d3f", "像火塘里最亮的那一下。就它了。"],
+        ["暖和的日赭", "#c69745", "像早上照进窗的那束光。就它了。"]
+      ];
+      const TINT_SLOTS = [
+        { left: "calc(50% - 58px)", top: "50%" },
+        { left: "calc(50% - 30px)", top: "45%" },
+        { left: "calc(50% - 2px)", top: "49%" },
+        { left: "calc(50% + 26px)", top: "53%" },
+        { left: "calc(50% - 16px)", top: "58%" }
+      ];
+
+      function riceTints(extraClass) {
+        return state.mealColors.map((name, i) => {
+          const hex = (MEAL_DYES.find(([n]) => n === name) || [, null, "#888"])[2];
+          const slot = TINT_SLOTS[i % TINT_SLOTS.length];
+          return `<span class="rice-tint${extraClass ? ` ${extraClass}` : ""}" style="background:${hex};left:${slot.left};top:${slot.top}"></span>`;
+        }).join("");
+      }
+
+      function mealStageHtml(frame) {
+        const bg = kitchenBgUrl ? `background-image:url(${kitchenBgUrl})` : "";
+        const kClass = kitchenBgUrl ? " kitchen-photo" : "";
+        if (mealStep === 0) {
+          return `<div class="process-visual meal${kClass}" style="${bg}"><img class="prop" src="assets/prop/米盆-白糯米-v1.webp" alt="盛着白糯米的木盆">${riceTints()}</div>`;
+        }
+        if (mealStep === 1) {
+          if (mealCookSteps.length === 0) {
+            return `<div class="process-visual meal${kClass}" style="${bg}"><img class="prop" src="assets/prop/米盆-白糯米-v1.webp" alt="还没浸泡的白糯米"></div>`;
+          }
+          if (mealCookSteps.length === 1) {
+            return `<div class="process-visual meal${kClass}" style="${bg}"><img class="prop" src="assets/prop/米盆-白糯米-v1.webp" alt="浸泡中的糯米，颜色正在渗入水里">${riceTints("soak")}</div>`;
+          }
+          if (mealCookSteps.length === 2) {
+            return `<div class="process-visual meal${kClass}" style="${bg}"><img class="prop" src="assets/prop/五色糯米-v1.webp" alt="分色浸泡好的五色糯米"></div>`;
+          }
+          return `<div class="process-visual meal ${mealCooked ? "cooking" : ""}${kClass}" style="${bg}">
+            <i class="steam one" style="left:58%"></i><i class="steam two" style="left:66%"></i><i class="steam three" style="left:74%"></i>
+            <img class="prop" src="assets/prop/五色糯米-v1.webp" alt="五色糯米">
+            <img class="prop tall" src="assets/prop/木甑-v1.webp" alt="木甑">
+          </div>`;
+        }
+        return `<div class="process-visual meal${kClass}" style="${bg}"><div class="basket-frames" data-frame="${frame}" aria-label="竹篮"><img src="assets/prop/竹篮-v1.webp" alt="姊妹饭竹篮"></div></div>`;
+      }
+
       function renderMeal() {
-        const colors = [
-          ["靛蓝与草木紫", "深色", "indigo", "#384b79"],
-          ["茜红与粉红", "暖色", "madder", "#a74258"],
-          ["金黄与本白", "亮色", "ochre", "#c69745"]
-        ];
         const copy = [
-          "先选一组颜色。正式版本会替换为经当地核验的染材与工序；这里用色彩选择保留交互节奏。",
-          "把浸泡、拌色与蒸制按顺序完成。原型没有失败状态，漏步骤时会给出轻提示。",
-          "把蒸好的彩色糯米装进竹篮。你的选择会留到节日赠礼和结尾回忆卡中。"
+          "外婆在盆边留了五样色样布条：红染姊妹花，紫染紫草，黄染密蒙花，黑染枫香树叶，白色留本色。五样都要选上。",
+          "把煮色素、浸泡上色与分甑蒸制按顺序完成。漏了步骤会给你轻提示。",
+          "把蒸好的彩色糯米装进竹篮，再用绣帕包好。",
+          "篮子的颜色定了。那今天的心情，是哪种颜色？"
         ];
 
         setDrawer("室内任务 · 厨房", "制作姊妹饭", `
-          ${stepper(["选色", "蒸制", "装篮"], mealStep)}
+          ${stepper(["选色", "蒸制", "装篮", "心情"], mealStep)}
           <p class="drawer-copy">${copy[mealStep]}</p>
-          <div class="process-visual ${mealStep === 1 ? "cooking" : ""} ${kitchenBgUrl ? "kitchen-photo" : ""}" style="--rice-color:${state.mealColorHex};${kitchenBgUrl ? `background-image:url(${kitchenBgUrl})` : ""}">
-            <i class="steam one"></i><i class="steam two"></i><i class="steam three"></i><div class="rice-bowl" aria-hidden="true"></div>
-          </div>
-          ${mealStep === 0 ? `<div class="choice-grid">${colors.map(([name, note, cls, hex]) => `<button class="choice ${state.mealColor === name ? "selected" : ""}" type="button" data-rice="${name}" data-hex="${hex}"><span class="swatch ${cls}"></span><span><strong>${name}</strong><small>${note} · 矢量色票占位</small></span></button>`).join("")}</div>` : ""}
-          ${mealStep === 1 ? `<div class="choice-grid three"><button class="choice" type="button" data-cook="soak"><strong>① 浸泡</strong></button><button class="choice" type="button" data-cook="mix"><strong>② 拌色</strong></button><button class="choice" type="button" data-cook="steam"><strong>③ 蒸制</strong></button></div><p class="source-note">工序和植物染材是交互占位，进入正式内容前需由施洞当地文化顾问核验。</p>` : ""}
-          ${mealStep === 2 ? `<div class="answer-box">这篮饭保留了你选的「${escapeHtml(state.mealColor)}」。篮盖合上时，阿岚终于觉得今天真的开始了。</div>` : ""}
-          <div class="action-row"><button class="primary" id="mealNext" type="button">${mealStep === 2 ? "完成装篮" : "继续"}</button>${mealStep > 0 ? `<button class="ghost" id="mealBack" type="button">上一步</button>` : ""}</div>
+          ${mealStageHtml(mealFrame)}
+          ${mealStep === 0 ? `<div class="choice-grid">${MEAL_DYES.map(([name, plant, hex]) => `
+            <button class="choice dye-card ${state.mealColors.includes(name) ? "selected" : ""}" type="button" data-dye="${name}">
+              <img class="dish" src="assets/prop/染料碗-${name}-v1.webp" alt="" aria-hidden="true">
+              <span><strong><i class="diamond-tag" style="color:${hex}"></i>${name}</strong><small>${plant}</small></span>
+            </button>`).join("")}</div>` : ""}
+          ${mealStep === 1 ? `<div class="choice-grid three">${
+            [["soak", "① 煮色素"], ["mix", "② 浸泡上色"], ["steam", "③ 分甑蒸制"]].map(([key, label]) => `
+              <button class="choice ${mealCookSteps.includes(key) ? "selected" : ""}" type="button" data-cook="${key}" ${mealCookSteps.includes(key) ? "disabled" : ""}><strong>${label}</strong></button>`
+            ).join("")
+          }</div>` : ""}
+          ${mealStep === 2 ? `<div class="choice-grid two">
+            <button class="choice" type="button" data-pack="fill" ${mealFrame >= 1 ? "disabled" : ""}><strong>把饭装进竹篮</strong></button>
+            <button class="choice" type="button" data-pack="wrap" ${mealFrame >= 2 ? "disabled" : ""}><strong>用绣帕包好</strong></button>
+          </div>` : ""}
+          ${mealStep === 3 ? `
+            <div class="choice-grid">${MEAL_MOODS.map(([name, hex]) => `
+              <button class="choice ${state.moodColor === name ? "selected" : ""}" type="button" data-mood="${name}">
+                <span class="swatch" style="background:${hex}"></span>
+                <span><strong>${name}</strong><small>今日心情</small></span>
+              </button>`).join("")}</div>
+            ${state.moodColor ? `<div class="answer-box">${escapeHtml(state.moodLine)}</div>` : ""}
+          ` : ""}
+          <div class="action-row"><button class="primary" id="mealNext" type="button">${mealStep === 3 ? "带上心情出发" : "继续"}</button>${mealStep > 0 ? `<button class="ghost" id="mealBack" type="button">上一步</button>` : ""}</div>
         `);
 
-        $$('[data-rice]').forEach((button) => button.addEventListener("click", () => {
-          state.mealColor = button.dataset.rice;
-          state.mealColorHex = button.dataset.hex;
+        $$('[data-dye]').forEach((button) => button.addEventListener("click", () => {
+          const name = button.dataset.dye;
+          const idx = state.mealColors.indexOf(name);
+          if (idx >= 0) state.mealColors.splice(idx, 1);
+          else state.mealColors.push(name);
+          state.mealColor = state.mealColors.length === 5 ? "五色姊妹饭" : "还没有染好";
+          state.mealColorHex = (MEAL_DYES.find(([n]) => n === state.mealColors[0]) || [, null, "#d8ccb4"])[2];
           renderMeal();
         }));
 
-        const cookingOrder = [];
         $$('[data-cook]').forEach((button) => button.addEventListener("click", () => {
           const required = ["soak", "mix", "steam"];
-          const next = required[cookingOrder.length];
+          const next = required[mealCookSteps.length];
           if (button.dataset.cook !== next) {
-            toast(`先完成「${{ soak: "浸泡", mix: "拌色", steam: "蒸制" }[next]}」`);
+            toast(`先完成「${{ soak: "煮色素", mix: "浸泡上色", steam: "分甑蒸制" }[next]}」`);
             return;
           }
-          cookingOrder.push(next);
-          button.classList.add("selected");
-          button.disabled = true;
-          if (cookingOrder.length === 3) toast("蒸汽起来了，火候刚好");
+          mealCookSteps.push(next);
+          if (mealCookSteps.length === 3) { mealCooked = true; toast("蒸汽起来了，火候刚好"); }
+          renderMeal();
+        }));
+
+        $$('[data-pack]').forEach((button) => button.addEventListener("click", () => {
+          if (button.dataset.pack === "fill" && mealFrame === 0) { mealFrame = 1; toast("彩色的糯米装进了竹篮"); }
+          else if (button.dataset.pack === "wrap" && mealFrame === 1) { mealFrame = 2; toast("绣帕包好了"); }
+          renderMeal();
+        }));
+
+        $$('[data-mood]').forEach((button) => button.addEventListener("click", () => {
+          const found = MEAL_MOODS.find(([name]) => name === button.dataset.mood);
+          state.moodColor = found[0];
+          state.moodLine = found[2];
+          renderMeal();
         }));
 
         $("#mealNext").addEventListener("click", () => {
-          if (mealStep === 1 && cookingOrder.length < 3) { toast("依次完成三个步骤再继续"); return; }
-          if (mealStep < 2) { mealStep += 1; renderMeal(); return; }
+          if (mealStep === 0 && state.mealColors.length !== 5) { toast("五样都要选上"); return; }
+          if (mealStep === 1 && !mealCooked) { toast("依次完成三个步骤再继续"); return; }
+          if (mealStep === 2 && mealFrame < 2) { toast(mealFrame === 0 ? "先把饭装进竹篮" : "还差绣帕没包好"); return; }
+          if (mealStep === 3 && !state.moodColor) { toast("选一种今天的心情"); return; }
+          if (mealStep < 3) { mealStep += 1; renderMeal(); return; }
           state.indoor.meal = true;
           renderTasks();
           closeDrawer();
-          narrate(`姊妹饭装好了。我选的是${state.mealColor}，到了江边再把这份心意送出去。`);
+          narrate(`红、紫、黄、黑、白，五色姊妹饭装好了。心情是${state.moodColor.replace(/^(沉静的|热烈的|暖和的)/, "")}。等到了江边，再把这份心意送出去。`);
           toast("任务完成：蒸好姊妹饭");
         });
         $("#mealBack")?.addEventListener("click", () => { mealStep -= 1; renderMeal(); });
       }
 
+      /* 施洞盛装五步穿戴（PRD §8.3；部件称谓见《她的姊妹节-盛装部件称谓调研.md》）。
+         预览不再叠加独立服饰图层，而是切换共用同一画布的六张完整状态图，避免人体与服饰错位。 */
+      const OUTFIT_STEPS = [
+        { key: "jacket", term: "大领对襟衣", img: "assets/char/盛装层-大领对襟衣-v1.webp", note: "先把衣穿正。姊妹节这一身，跟赶场穿的不一样。" },
+        { key: "skirt", term: "百褶裙", img: "assets/char/盛装层-百褶裙-v1.webp", note: "百褶裙要及踝。走起路来，裙摆才是稳的。" },
+        { key: "apron", term: "围腰", img: "assets/char/盛装层-围腰-v1.webp", note: "围腰系好，绣片莫歪。这是手上绣出来的东西。" },
+        { key: "necklace", term: "银项圈", img: "assets/char/盛装层-银项圈-v1.webp", note: "银饰压得住这身衣裳。戴多戴少，看家里备的。" },
+        { key: "headdress", term: "银角银冠", img: "assets/char/盛装层-银角银冠-v1.webp", note: "这才是姊妹节戴的。重是重，戴稳就好。" }
+      ];
+      const OUTFIT_FINAL_IMG = "assets/char/女主盛装着装-v3.webp";
+      const OUTFIT_STATE_IMAGES = [
+        "assets/char/换装步骤-01-基底-v2.webp",
+        "assets/char/换装步骤-02-去百褶裙-v3.webp",
+        "assets/char/换装步骤-03-去围腰-v2.webp",
+        "assets/char/换装步骤-04-去银项圈-v2.webp",
+        "assets/char/换装步骤-05-去银冠-v2.webp",
+        OUTFIT_FINAL_IMG
+      ];
+
+      function outfitStackHtml() {
+        const stateIndex = Math.min(outfitStep, OUTFIT_STATE_IMAGES.length - 1);
+        const alt = stateIndex === OUTFIT_STEPS.length ? "盛装完成态" : `穿戴步骤 ${stateIndex + 1}`;
+        return `<div class="outfit-stack"><img src="${OUTFIT_STATE_IMAGES[stateIndex]}" alt="${alt}"></div>`;
+      }
+
       function renderOutfit() {
-        const outfits = [
-          ["靛蓝短衣与百褶裙", "适合走动的节日基础层", "#354874"],
-          ["茜红围腰与深靛裙", "让人物重点更鲜明", "#653b62"],
-          ["青靛上衣与暗纹裙", "较安静的冷色组合", "#315b71"]
-        ];
-        const silverChoices = ["银簪与胸前银饰", "银簪与轻量项圈", "只戴银簪"];
-        const copy = [
-          "先选服装基础层。矢量服装仅表达层级和交互，具体形制、纹样与佩戴顺序将在正式资产阶段核验。",
-          "再选择银饰层。银饰不是万能装饰，它与特定盛装、场合和佩戴方式一起出现。",
-          "确认整体穿戴。最终场景会保留你的颜色选择，而不是改变剧情结果。"
-        ];
+        const total = OUTFIT_STEPS.length;
+        const atConfirm = outfitStep >= total;
+        const current = atConfirm ? null : OUTFIT_STEPS[outfitStep];
+        const stepperLabels = [...OUTFIT_STEPS.map((s) => s.term), "确认"];
+        const stateIndex = Math.min(outfitStep, OUTFIT_STATE_IMAGES.length - 1);
+        const hero = $("#charHeroine");
+        if (hero) {
+          hero.src = OUTFIT_STATE_IMAGES[stateIndex];
+          hero.alt = stateIndex === total ? "阿岚的盛装立绘" : `阿岚的穿戴步骤 ${stateIndex + 1}`;
+          hero.style.height = "62%";
+          /* 步骤图为 1024 方图，补偿 left 使内容中心与便装立绘（left 38%+半宽）重合——原地换装不跳位 */
+          hero.style.left = "30.5%";
+          hero.style.bottom = "1%";
+        }
+
         setDrawer("室内任务 · 衣柜", "穿好节日盛装", `
-          ${stepper(["衣装", "银饰", "确认"], outfitStep)}
-          <p class="drawer-copy">${copy[outfitStep]}</p>
-          <div class="outfit-preview"><div class="paper-doll ${outfitStep >= 1 ? "silver-on" : ""}" style="--outfit-color:${state.outfitHex}"><i class="hair"></i><i class="head"></i><i class="body"></i><i class="skirt"></i><i class="apron"></i><i class="legs"></i><i class="silver"></i></div></div>
-          ${outfitStep === 0 ? `<div class="choice-grid">${outfits.map(([name, note, hex]) => `<button class="choice ${state.outfit === name ? "selected" : ""}" type="button" data-outfit="${name}" data-hex="${hex}"><span class="swatch" style="background:${hex}"></span><span><strong>${name}</strong><small>${note}</small></span></button>`).join("")}</div>` : ""}
-          ${outfitStep === 1 ? `<div class="choice-grid">${silverChoices.map((name) => `<button class="choice ${state.silver === name ? "selected" : ""}" type="button" data-silver="${name}"><strong>${name}</strong><small>正式造型待施洞当地审核</small></button>`).join("")}</div>` : ""}
-          ${outfitStep === 2 ? `<div class="answer-box">${escapeHtml(state.outfit)}<br>${escapeHtml(state.silver)}<br><small>这是为 Demo 构建的分层矢量占位，不代表最终服饰考据。</small></div>` : ""}
-          <div class="action-row"><button class="primary" id="outfitNext" type="button">${outfitStep === 2 ? "确认穿好" : "继续"}</button>${outfitStep > 0 ? `<button class="ghost" id="outfitBack" type="button">上一步</button>` : ""}</div>
+          ${stepper(stepperLabels, Math.min(outfitStep, total))}
+          <div class="outfit-preview">${outfitStackHtml()}</div>
+          ${current ? `
+            <div class="wear-card">
+              <img src="${current.img}" alt="${current.term}组件">
+              <div><strong>${current.term}</strong><small>${current.note}</small></div>
+            </div>
+            <div class="action-row"><button class="primary" id="outfitNext" type="button">穿上${current.term}</button>${outfitStep > 0 ? `<button class="ghost" id="outfitBack" type="button">上一步</button>` : ""}</div>
+          ` : `
+            <p class="drawer-copy">镜子里这个人，一年里头也见不了几回。……是我。</p>
+            <div class="action-row"><button class="primary" id="outfitNext" type="button">确认穿好</button><button class="ghost" id="outfitBack" type="button">再调整一层</button></div>
+          `}
         `);
 
-        $$('[data-outfit]').forEach((button) => button.addEventListener("click", () => {
-          state.outfit = button.dataset.outfit;
-          state.outfitHex = button.dataset.hex;
-          renderOutfit();
-        }));
-        $$('[data-silver]').forEach((button) => button.addEventListener("click", () => { state.silver = button.dataset.silver; renderOutfit(); }));
         $("#outfitNext").addEventListener("click", () => {
-          if (outfitStep < 2) { outfitStep += 1; renderOutfit(); return; }
+          if (!atConfirm) {
+            if (!state.outfitLayers.includes(current.key)) state.outfitLayers.push(current.key);
+            outfitStep += 1;
+            renderOutfit();
+            return;
+          }
           state.indoor.outfit = true;
+          state.outfit = "施洞盛装 · 银角银冠全套";
+          state.silver = "多层银项圈与银压领";
           renderTasks();
           closeDrawer();
-          say("外婆", "衣裳不是穿得越满越好。站稳、走稳，知道自己为什么穿，才算准备好。", { fallback: "外婆看了看我身上的盛装，点了点头。" });
-          toast("任务完成：穿好节日盛装");        });
-        $("#outfitBack")?.addEventListener("click", () => { outfitStep -= 1; renderOutfit(); });
+          say("外婆", grandmaReply("衣裳不是穿得越满越好。站稳、走稳，知道自己为什么穿，才算准备好。"), { fallback: "外婆看了看我身上的盛装，点了点头。" });
+          toast("任务完成：穿好节日盛装");
+        });
+        $("#outfitBack")?.addEventListener("click", () => {
+          if (atConfirm) { state.outfitLayers.pop(); }
+          else if (state.outfitLayers.length) { state.outfitLayers.pop(); }
+          outfitStep = Math.max(0, outfitStep - 1);
+          renderOutfit();
+        });
       }
 
       /* 文化物件知识库：剧情文本 §三 原样接入（回答文案未做任何改写）。
@@ -1766,7 +2046,6 @@
       const CULTURE_OBJECTS = {
         hairpin: {
           name: "银簪",
-          prompt: "想问哪样？点上面的问。",
           qa: [
             ["这支银簪是哪样时候戴的？", "这是盛装时候的簪子。大日子才戴，平时收在盒盒头。"],
             ["是你年轻时候的吗？", "我戴了几十年咯。是哪样来的，你以后去问你妈妈。"],
@@ -1776,7 +2055,6 @@
         },
         embroidery: {
           name: "绣片",
-          prompt: "想问哪样？点上面的问。",
           qa: [
             ["这块绣片是哪样绣的？", "一针一针绣的。学绣花没有捷径，先是学拆，再学绣。"],
             ["是谁绣的？", "我绣过，你妈妈的嫁妆绣片也有我绣的。你自家以后也要学。"],
@@ -1786,7 +2064,6 @@
         },
         basket: {
           name: "姊妹饭竹篮",
-          prompt: "想问哪样？点上面的问。",
           qa: [
             ["为哪样姊妹饭要装竹篮？", "竹篮透气，饭不馊。拿去歌场，也好看、好递。"],
             ["姊妹饭和普通糯米饭有哪样不同？", "姊妹饭是节日的饭。染了色，装了篮，是要拿去送人的。"],
@@ -1796,7 +2073,6 @@
         },
         firepit: {
           name: "火塘",
-          prompt: "想问哪样？点上面的问。",
           qa: [
             ["火塘为哪样一年到头不熄？", "火塘是屋头的心。煮饭、烤火、一家人坐拢讲话，都在这点。"],
             ["我小时候是不是也坐在这点？", "你小时候就坐我腿上，烤火听故事。如今换你讲给我听了。"]
@@ -1805,7 +2081,6 @@
         },
         sourjar: {
           name: "酸汤坛",
-          prompt: "想问哪样？点上面的问。",
           qa: [
             ["这个坛坛头装的是哪样？", "酸汤。我们这边人讲「三天不吃酸，脚打闪闪」。"],
             ["酸汤是哪样来的？", "米汤、菜养出来的，越养越香。坛子要干净，手也要干净。"]
@@ -1818,7 +2093,8 @@
         const obj = CULTURE_OBJECTS[key];
         if (!obj) return;
         obj.id = key; /* 供 /api/ask 定位知识条目 */
-        npcSay("外婆", [obj.prompt], { hint: "点上方问题问外婆", fallback: "外婆低头继续手里的活。" });
+        npcSay("外婆", [""], { hint: "", fallback: null });
+        bubble.classList.add("question-picker");
         openBubbleAi(obj);
       }
 
@@ -1860,10 +2136,14 @@
         state.indoor.culture = true;
         state.question = `${obj.name}：${question}`;
         renderTasks();
-        npcSay("外婆", [answer], {
+        /* B 方案：外婆的收尾语作为气泡第二页（外婆口吻，留在她头顶），再点一次气泡直接消失。
+           不再往通栏塞 fallback 旁白（此前那句会残留到第二幕，成 bug）。 */
+        npcSay("外婆", [
+          grandmaReply(answer),
+          firstTime ? "好咯，去做你的事。" : "还有哪样想问的，随时问。"
+        ], {
           source: true,
-          hint: "点击收起",
-          fallback: firstTime ? "好咯，去做你的事。" : "还有哪样想问的，随时问。"
+          fallback: null
         });
         bubble._object = obj; /* 来源织带按物件出依据 */
         if (firstTime) toast("任务完成：向外婆问了一件事");
@@ -1878,8 +2158,9 @@
           layer.id = "bubbleAi";
           bubble.appendChild(layer);
         }
-        layer.innerHTML = `<p style="margin:0;color:var(--muted-text);font-size:13px">问外婆 · ${escapeHtml(obj.name)}（离线资料 · 待当地复核）</p>` +
+        layer.innerHTML = `<p style="margin:0;color:var(--muted-text);font-size:13px">问外婆 · ${escapeHtml(obj.name)}</p>` +
           obj.qa.map(([q]) => `<button class="ai-q" type="button" data-aiq="${escapeHtml(q)}">${escapeHtml(q)}</button>`).join("");
+        layer.onclick = (event) => event.stopPropagation();
         layer.hidden = false;
         bubble._object = obj;
         /* 若展开后溢出舞台底部，再翻回气泡上方 */
@@ -1898,13 +2179,14 @@
       function closeBubbleAi() {
         const layer = $("#bubbleAi");
         if (layer) layer.hidden = true;
+        bubble.classList.remove("question-picker");
       }
 
       function renderSong() {
         const intents = ["把祝福送给朋友", "把勇气留给自己", "谢谢家人的陪伴"];
         const lyrics = [
-          "先听场地里的歌声。正式版本会使用经授权的当地录音或由文化顾问审核的内容。",
-          "现在选择一句「回声意象」。它不是伪造的苗歌翻译，只代表阿岚此刻想表达的心情。",
+          "先听这段 30 秒演示混音，感受江畔对歌的氛围。",
+          "现在选择一句「回声意象」，它代表阿岚此刻想表达的心情。",
           "你的回声已经准备好。它不会改变结局，但会成为今天属于你的那一处细节。"
         ];
         setDrawer("室外任务 · 对歌场", "听见，再回应", `
@@ -1916,38 +2198,91 @@
               <path d="M10 82c24-28 48 28 72 0s48 28 72 0 48 28 72 0" fill="none" stroke="#d6a654" stroke-width="3" opacity=".8"/>
             </svg>
           </div>
-          ${songStep === 0 ? `<div class="answer-box">♪ 风从江面来，人群的歌声在木楼之间接续。<br><small>音频资产暂未接入，字幕完整保留信息。</small></div>` : ""}
+          ${songStep === 0 ? `<div class="answer-box">♪ 风从江面来，人群的歌声在木楼之间接续。<br><small>Riverside Sisters Bloom · 30 秒演示混音</small></div>` : ""}
           ${songStep === 1 ? `<div class="choice-grid">${intents.map((intent) => `<button class="choice ${state.intent === intent ? "selected" : ""}" type="button" data-intent="${intent}"><strong>${intent}</strong></button>`).join("")}</div>` : ""}
-          ${songStep === 2 ? `<div class="answer-box">江水记住来路，饭香记住清晨。<br>阿岚想：${escapeHtml(state.intent)}。</div><p class="source-note">「回声诗」是当代互动文案，不冒充传统苗歌或苗语翻译。</p>` : ""}
-          <div class="action-row"><button class="primary" id="songNext" type="button">${songStep === 2 ? "完成回应" : "继续"}</button>${songStep > 0 ? `<button class="ghost" id="songBack" type="button">上一步</button>` : ""}</div>
+          ${songStep === 2 ? `<div class="answer-box">江水记住来路，饭香记住清晨。<br>阿岚想：${escapeHtml(state.intent)}。</div>` : ""}
+          ${songStep === 0 ? `
+            <div class="action-row"><button class="primary" id="songListen" type="button" aria-pressed="false">聆听 30 秒歌声</button><button class="ghost" id="songNext" type="button">听完，继续</button></div>
+          ` : `
+            <div class="action-row"><button class="primary" id="songNext" type="button">${songStep === 2 ? "完成回应" : "继续"}</button><button class="ghost" id="songBack" type="button">上一步</button></div>
+          `}
         `);
+        const listenButton = $("#songListen");
+        const syncListenButton = () => {
+          if (!listenButton) return;
+          const playing = !songAudio.paused && !songAudio.ended;
+          listenButton.setAttribute("aria-pressed", String(playing));
+          listenButton.textContent = songAudio.ended ? "重新聆听" : playing ? "暂停聆听" : songAudio.currentTime > 0 ? "继续聆听" : "聆听 30 秒歌声";
+        };
+        if (listenButton) {
+          songAudio.onplay = syncListenButton;
+          songAudio.onpause = syncListenButton;
+          songAudio.onended = () => { syncListenButton(); toast("30 秒歌声已播放完毕"); };
+          songAudio.onerror = () => toast("音频加载失败，可继续使用字幕完成体验");
+          syncListenButton();
+          listenButton.addEventListener("click", async () => {
+            if (songAudio.ended) songAudio.currentTime = 0;
+            if (!songAudio.paused) { songAudio.pause(); return; }
+            try {
+              state.sound = true;
+              await songAudio.play();
+            } catch {
+              toast("浏览器未能播放音频，可继续使用字幕完成体验");
+            }
+          });
+        }
         $$('[data-intent]').forEach((button) => button.addEventListener("click", () => { state.intent = button.dataset.intent; renderSong(); }));
         $("#songNext").addEventListener("click", () => {
-          if (songStep < 2) { songStep += 1; renderSong(); return; }
+          if (songStep < 2) { songAudio.pause(); songStep += 1; renderSong(); return; }
           state.outdoor.song = true;
           renderTasks();
           closeDrawer();
           narrate("我不用唱得和谁一样。先听见别人，再把自己的话稳稳送出去。");
           toast("任务完成：听见并回应");
         });
-        $("#songBack")?.addEventListener("click", () => { songStep -= 1; renderSong(); });
+        $("#songBack")?.addEventListener("click", () => { songAudio.pause(); songStep -= 1; renderSong(); });
       }
+
+      /* 赠饭四心意（剧情文本 §S6）：只承载阿岚递出时想说的一句话。demo 未区分赠饭对象立绘，
+         不做对方开口的回应气泡。无对错、无好感度、无拒绝分支。 */
+      const GIFT_INTENTS = [
+        { key: "感谢", handLine: "谢谢你今年也来。" },
+        { key: "思念", handLine: "好久没见你咯。" },
+        { key: "期待", handLine: "明年姊妹节，还来。" },
+        { key: "祝福", handLine: "愿你今年顺顺当当。" }
+      ];
 
       function renderGift() {
         setDrawer("室外任务 · 清水江畔", "赠出姊妹饭", `
-          <p class="drawer-copy">把清晨准备好的那一篮饭送出去。这里不设置「正确对象」或好感度，重点是完成一次带着个人心意的赠予。</p>
-          <div class="process-visual" style="--rice-color:${state.mealColorHex}"><div class="rice-bowl" aria-hidden="true"></div></div>
-          <div class="answer-box">饭的颜色：${escapeHtml(state.mealColor)}<br>想表达：${escapeHtml(state.intent)}</div>
-          <p class="source-note">赠礼的具体礼俗与物件含义将在正式内容阶段继续核验；本原型只展示交互结构。</p>
+          <p class="drawer-copy">把清晨准备好的那一篮饭送出去。先选一句今天想说的话——这里不设置「正确对象」或好感度，重点是完成一次带着个人心意的赠予。</p>
+          <div class="process-visual meal"><div class="basket-frames" data-frame="2" aria-label="包好的姊妹饭竹篮"><img src="assets/prop/竹篮-v1.webp" alt="包好绣帕的姊妹饭竹篮"></div></div>
+          <div class="choice-grid two">${GIFT_INTENTS.map(({ key, handLine }) => `
+            <button class="choice ${state.giftIntent === key ? "selected" : ""}" type="button" data-gift="${key}">
+              <span><strong>${key}</strong><small>「${escapeHtml(handLine)}」</small></span>
+            </button>`).join("")}</div>
+          <div class="answer-box">饭的颜色：${escapeHtml(state.mealColor)}${state.giftIntent ? `<br>递出时想说：「${escapeHtml(GIFT_INTENTS.find((g) => g.key === state.giftIntent).handLine)}」` : ""}</div>
           <div class="action-row"><button class="primary" id="giftDone" type="button">把饭递出去</button><button class="ghost" id="giftCancel" type="button">再等一会儿</button></div>
         `);
+
+        $$('[data-gift]').forEach((button) => button.addEventListener("click", () => {
+          state.giftIntent = button.dataset.gift;
+          renderGift();
+        }));
+
         $("#giftDone").addEventListener("click", () => {
+          if (!state.giftIntent) { toast("先选一句今天想说的话"); return; }
+          const intent = GIFT_INTENTS.find((g) => g.key === state.giftIntent);
+          state.giftIntentNote = intent.handLine;
           state.outdoor.gift = true;
           renderTasks();
           closeDrawer();
-          narrate("原来准备好的意义，不是证明我会多少，而是我终于能把一份心意交到别人手里。");
+          /* 递出旁白（阿岚）→ 收束旁白 → 结尾。demo 未区分赠饭对象立绘，不做对方开口的气泡。 */
+          narrate(`我把篮子递过去，轻声说：「${intent.handLine}」对方双手接过，笑了笑。`);
           toast("这一天的任务完成了");
-          setTimeout(showEnding, state.reducedMotion ? 20 : 1200);
+          setTimeout(() => {
+            narrate("原来准备好的意义，不是证明我会多少，而是我终于能把一份心意交到别人手里。");
+            setTimeout(showEnding, state.reducedMotion ? 20 : 1600);
+          }, state.reducedMotion ? 20 : 2000);
         });
         $("#giftCancel").addEventListener("click", closeDrawer);
       }
@@ -1958,7 +2293,7 @@
           <div class="settings-list">
             <div class="setting-row"><div><strong>对白字幕</strong><small>始终显示关键对白与歌声信息</small></div><button class="switch" id="subtitleSwitch" type="button" role="switch" aria-label="对白字幕" aria-checked="${state.subtitles}"></button></div>
             <div class="setting-row"><div><strong>减少动态效果</strong><small>关闭蒸汽与大部分过渡动画</small></div><button class="switch" id="motionSwitch" type="button" role="switch" aria-label="减少动态效果" aria-checked="${state.reducedMotion}"></button></div>
-            <div class="setting-row"><div><strong>环境声音</strong><small>原型暂未接入音频，保留控制位置</small></div><button class="switch" id="soundSwitch" type="button" role="switch" aria-label="环境声音" aria-checked="${state.sound}"></button></div>
+            <div class="setting-row"><div><strong>环境声音</strong><small>控制场景音频；关闭时会暂停当前歌声</small></div><button class="switch" id="soundSwitch" type="button" role="switch" aria-label="环境声音" aria-checked="${state.sound}"></button></div>
           </div>
           <div class="action-row"><button class="primary" id="settingsDone" type="button">完成</button></div>
         `);
@@ -1975,7 +2310,8 @@
         $("#soundSwitch").addEventListener("click", (event) => {
           state.sound = !state.sound;
           event.currentTarget.setAttribute("aria-checked", state.sound);
-          toast("音频资产暂未接入，控制状态已保留");
+          if (!state.sound) songAudio.pause();
+          toast(state.sound ? "环境声音已开启" : "环境声音已关闭");
         });
         $("#settingsDone").addEventListener("click", closeDrawer);
       }
@@ -1996,6 +2332,7 @@
         $("#indoorScene").hidden = true;
         $("#outdoorScene").hidden = false;
         $("#indoorHotspots").hidden = true;
+        $("#objectMarkers").hidden = true;
         $$(".outdoor-hotspot").forEach((node) => { node.style.display = "inline-flex"; });
         $("#sceneEyebrow").textContent = "第二幕 · 江畔";
         $("#sceneTitle").textContent = "走进姊妹节";
@@ -2007,29 +2344,43 @@
 
       function showEnding() {
         $("#memoryList").innerHTML = `
-          <div class="memory-item"><dt>姊妹饭</dt><dd>${escapeHtml(state.mealColor)}</dd></div>
+          <div class="memory-item"><dt>姊妹饭</dt><dd>${escapeHtml(state.mealColor)}${state.moodColor ? " · " + escapeHtml(state.moodColor.replace("的", " · ")) : ""}</dd></div>
           <div class="memory-item"><dt>节日衣装</dt><dd>${escapeHtml(state.outfit)}</dd></div>
           <div class="memory-item"><dt>问过外婆</dt><dd>${escapeHtml(state.question)}</dd></div>
           <div class="memory-item"><dt>心里的回声</dt><dd>${escapeHtml(state.intent)}</dd></div>
+          <div class="memory-item"><dt>递饭时说</dt><dd>${state.giftIntent ? escapeHtml(`${state.giftIntent} · 「${state.giftIntentNote}」`) : "还没有递出"}</dd></div>
         `;
         $("#ending").classList.add("open");
         $("#restartButton").focus();
       }
 
       function restart() {
+        songAudio.pause();
+        songAudio.currentTime = 0;
         state = initialState();
         mealStep = 0;
+        mealCooked = false;
+        mealFrame = 0;
+        mealCookSteps = [];
         outfitStep = 0;
         songStep = 0;
         $("#ending").classList.remove("open");
         $("#indoorScene").hidden = false;
         $("#outdoorScene").hidden = true;
         $("#indoorHotspots").hidden = false;
+        $("#objectMarkers").hidden = false;
         $$(".outdoor-hotspot").forEach((node) => { node.style.display = "none"; });
         $("#sceneEyebrow").textContent = "第一幕 · 家屋";
         $("#sceneTitle").textContent = "出门前的清晨";
         $("#sceneTime").textContent = "姊妹节当天 · 08:10";
         document.body.classList.toggle("reduce-motion", state.reducedMotion);
+        const hero = $("#charHeroine");
+        if (hero) {
+          hero.src = "assets/char/女主便装基底-v1.webp";
+          hero.style.height = "";
+          hero.style.left = "38%";
+          hero.style.bottom = "";
+        }
         renderTasks();
         narrate("饭要蒸好，衣裳也要穿稳。今天，是我第一次自己准备好再去江边。");
         $("#spotWardrobe").focus();
@@ -2071,7 +2422,7 @@
           $("#indoorScene").classList.add("bg-ready");
           $("#indoorHotspots").classList.add("bg-ready");
         }],
-        ["A8", "assets/scene/节日场地-v1.webp", () => {
+        ["A8", "assets/scene/节日场地-v3.webp", () => {
           $("#outdoorScene").classList.add("bg-ready");
         }],
         ["A4", "assets/scene/厨房近景-v1.webp", () => {}],
@@ -2098,7 +2449,7 @@
         node.id = "charHeroine";
         node.src = heroImg.src;
         node.alt = "阿岚的便装立绘";
-        node.style.left = "40%";
+        node.style.left = "38%";
         $("#indoorScene").appendChild(node);
       };
       heroImg.src = "assets/char/女主便装基底-v1.webp";
