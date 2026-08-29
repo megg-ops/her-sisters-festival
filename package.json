@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "《她的姊妹节》— 多彩贵州·贵客松赛道三参赛作品。单文件交互 demo + AI 文化问答 Serverless 代理。",
-  "type": "module",
   "engines": {
     "node": ">=18"
   },
