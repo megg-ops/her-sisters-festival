@@ -1,0 +1,19 @@
+{
+  "asset_id": "C6",
+  "asset_name": "竹篮",
+  "version": 1,
+  "mode": "builtin_image_gen_then_local_chroma_key",
+  "generation_type": "reference_guided_generation",
+  "n": 1,
+  "generated_at": "2026-08-29",
+  "reference_image": "assets/ui-directions/B-textile-memory.png",
+  "source_output": "/home/freya/.codex/generated_images/01a046f0-5424-73d1-a091-33b74ff24965/exec-6b7688f8-e4b4-4a30-ae64-e9f77b2b3133.png",
+  "workspace_green_source": "assets/prop/竹篮-v1-green.png",
+  "workspace_master": "assets/prop/竹篮-v1.png",
+  "workspace_deployment": "assets/prop/竹篮-v1.webp",
+  "dimensions": "1672x941",
+  "pixel_format": "RGBA",
+  "alpha": true,
+  "validation": "accepted_as_v1_prototype",
+  "notes": "Three states are in one horizontal sprite sheet. Basket form, rice colors and wrapping method remain pending local review."
+}

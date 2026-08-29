@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "project": "她的姊妹节",
+    "version": "v0.1",
+    "auditStatus": "原型资料 · 待当地复核",
+    "updatedAt": "2026-08-29",
+    "note": "条目内容原样取自《她的姊妹节-背景故事与剧情文本.md》§三 与 demo.html CULTURE_OBJECTS；依据 PRD §9.4 公开资料整理，正式发布前须由施洞当地文化工作者复核。",
+    "boundaryScript": {
+      "outOfKnowledge": "这个我讲不准。",
+      "inappropriateInput": "今天过节，讲点屋头的事嘛。",
+      "timeoutOfflineLabel": "离线资料"
+    }
+  },
+  "objects": [
+    {
+      "id": "hairpin",
+      "topic": "银簪",
+      "applicableScene": "S2 堂屋 · 外婆身边（簪盒）",
+      "facts": [
+        { "question": "这支银簪是哪样时候戴的？", "answer": "这是盛装时候的簪子。大日子才戴，平时收在盒盒头。" },
+        { "question": "是你年轻时候的吗？", "answer": "我戴了几十年咯。是哪样来的，你以后去问你妈妈。" },
+        { "question": "为哪样节日要戴银饰？", "answer": "银饰是盛装的一部分。姊妹节这样的大日子，衣裳要齐整，头上也要齐整。" }
+      ],
+      "boundary": "簪子来历不展开（答'去问你妈妈'）；银饰纹样与尺寸细节不作普化表述。",
+      "sources": [
+        { "org": "贵州省博物馆", "title": "《馆藏台江施洞苗族女盛装银饰》", "url": "https://zg.gzmuseum.com/gbyw/202507/1071.html" },
+        { "org": "中国非物质文化遗产网", "title": "中国非物质文化遗产数字博物馆", "url": "https://www.ihchina.cn/" }
+      ],
+      "audit": { "status": "原型资料 · 待当地复核", "reviewer": null, "date": "2026-08-29", "version": "v0.1" }
+    },
+    {
+      "id": "embroidery",
+      "topic": "绣片",
+      "applicableScene": "S2 堂屋 · 绣篮",
+      "facts": [
+        { "question": "这块绣片是哪样绣的？", "answer": "一针一针绣的。学绣花没有捷径，先是学拆，再学绣。" },
+        { "question": "是谁绣的？", "answer": "我绣过，你妈妈的嫁妆绣片也有我绣的。你自家以后也要学。" },
+        { "question": "绣片上的花纹是哪样意思？", "answer": "有些花样是有讲法的。这一块的讲法我讲不准，不敢乱讲给你听。" }
+      ],
+      "boundary": "花纹含义属'无资料即明说'演示项：不得代答具体纹样寓意。",
+      "sources": [
+        { "org": "中国非物质文化遗产网", "title": "中国非物质文化遗产数字博物馆", "url": "https://www.ihchina.cn/" }
+      ],
+      "audit": { "status": "原型资料 · 待当地复核", "reviewer": null, "date": "2026-08-29", "version": "v0.1" }
+    },
+    {
+      "id": "basket",
+      "topic": "姊妹饭竹篮",
+      "applicableScene": "S2 堂屋 · 梁下/桌边竹篮",
+      "facts": [
+        { "question": "为哪样姊妹饭要装竹篮？", "answer": "竹篮透气，饭不馊。拿去歌场，也好看、好递。" },
+        { "question": "姊妹饭和普通糯米饭有哪样不同？", "answer": "姊妹饭是节日的饭。染了色，装了篮，是要拿去送人的。" },
+        { "question": "饭里头可以放东西吗？", "answer": "老辈子有放东西的讲法。具体放哪样、是哪样意思，我讲不准，不敢跟你乱讲。" }
+      ],
+      "boundary": "饭中夹带物件的含义触及 PRD §20.3：核验前不得给出具体说法。",
+      "sources": [
+        { "org": "台江县人民政府", "title": "《姊妹节》", "url": "https://www.gztaijiang.gov.cn/cbagx/jrxs/202310/t20231019_82818665.html" }
+      ],
+      "audit": { "status": "原型资料 · 待当地复核", "reviewer": null, "date": "2026-08-29", "version": "v0.1" }
+    },
+    {
+      "id": "firepit",
+      "topic": "火塘",
+      "applicableScene": "S2 堂屋 · 火塘",
+      "facts": [
+        { "question": "火塘为哪样一年到头不熄？", "answer": "火塘是屋头的心。煮饭、烤火、一家人坐拢讲话，都在这点。" },
+        { "question": "我小时候是不是也坐在这点？", "answer": "你小时候就坐我腿上，烤火听故事。如今换你讲给我听了。" }
+      ],
+      "boundary": "火塘祭祀与禁忌细节不进入回答（PRD §20 未核验项）。",
+      "sources": [
+        { "org": "中国非物质文化遗产网", "title": "中国非物质文化遗产数字博物馆", "url": "https://www.ihchina.cn/" }
+      ],
+      "audit": { "status": "原型资料 · 待当地复核", "reviewer": null, "date": "2026-08-29", "version": "v0.1" }
+    },
+    {
+      "id": "sourjar",
+      "topic": "酸汤坛",
+      "applicableScene": "S2 堂屋 · 厨房门口",
+      "facts": [
+        { "question": "这个坛坛头装的是哪样？", "answer": "酸汤。我们这边人讲「三天不吃酸，脚打闪闪」。" },
+        { "question": "酸汤是哪样来的？", "answer": "米汤、菜养出来的，越养越香。坛子要干净，手也要干净。" }
+      ],
+      "boundary": "发酵工艺细节以台江县公开资料为限，不扩展。",
+      "sources": [
+        { "org": "台江县人民政府", "title": "《苗族酸汤》", "url": "https://www.gztaijiang.gov.cn/cbagx/tjly/msjs/202403/t20240320_83968488.html" }
+      ],
+      "audit": { "status": "原型资料 · 待当地复核", "reviewer": null, "date": "2026-08-29", "version": "v0.1" }
+    }
+  ]
+}

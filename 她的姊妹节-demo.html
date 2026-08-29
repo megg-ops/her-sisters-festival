@@ -21,6 +21,8 @@
       --silver: oklch(82% 0.015 245);
       --mist-white: oklch(96% 0.006 250);
       --muted-text: oklch(72% 0.014 250);
+      --cloth-warm: oklch(84% 0.035 85);
+      --text-on-cloth: oklch(15% 0.006 85);
       --danger: oklch(63% 0.2 28);
       --serif: "Source Han Serif SC", "Noto Serif SC", "Songti SC", STSong, serif;
       --sans: "Source Han Sans SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
@@ -110,6 +112,74 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M0 20h80M0 60h80M20 0v80M60 0v80' stroke='%23d9e5ed' stroke-opacity='.08' stroke-width='1'/%3E%3C/svg%3E");
       mix-blend-mode: soft-light;
     }
+
+    /* NPC 占位色块：任务单允许的"抽象色块站位"，用于在资产到货前测试气泡锚定 */
+    .npc-placeholder {
+      position: absolute;
+      width: 7%;
+      height: 34%;
+      display: grid;
+      place-items: end center;
+      background: color-mix(in oklch, var(--indigo-cloth) 82%, black);
+      border: 2px dashed color-mix(in oklch, var(--silver) 55%, transparent);
+      border-radius: 8px 8px 0 0;
+      color: var(--muted-text);
+      font-size: 12px;
+      letter-spacing: .1em;
+      pointer-events: none;
+    }
+
+    .npc-placeholder span { padding-bottom: 8px; }
+
+    /* 外婆固定站位：堂屋火塘边（A3 场景内的固定坐标）；妈妈在厨房门帘侧 */
+    #npcGrandma { left: 63%; top: 42%; }
+    #npcMom { left: 39%; top: 44%; height: 31%; }
+
+    /* 室外站位：阿月招手处偏左前景；阿禾（赠饭对象）偏右前景 */
+    #npcAyue { left: 30%; top: 46%; height: 30%; background: color-mix(in oklch, var(--river-cyan) 45%, var(--indigo-ink)); }
+    #npcAhe { left: 66%; top: 47%; height: 30%; background: color-mix(in oklch, var(--madder-red) 45%, var(--indigo-ink)); }
+
+    /* 资产到货后启用：立绘贴图（静态站位，无行走/动画） */
+    .char {
+      position: absolute;
+      height: 44%;
+      bottom: 9.5%;
+      object-fit: contain;
+      object-position: bottom;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 10px rgb(4 10 20 / 30%));
+    }
+
+    /* 场景背景挂载点：A2/A3/A8 资产到货后由 JS 写入 background-image，不硬编码等待资产 */
+    .scene-bg {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      display: none;
+    }
+
+    .scene-bg.ready { display: block; }
+    .scene-bg.ready + svg.scene-art { display: none; }
+
+    /* A3 已把外婆画进背景：底图就绪后隐藏室内占位块，锚点移到画中外婆身上 */
+    .scene.bg-ready .npc-placeholder { visibility: hidden; }
+    .scene.bg-ready #npcGrandma { left: 66%; top: 38%; width: 10%; height: 38%; }
+
+    /* 轻量物件标记固定站位（A3 与占位 SVG 同一房间布局，两态通用；容器在舞台层） */
+    #objHairpin { left: 74%; top: 46%; }
+    #objEmbroidery { left: 20%; top: 58%; }
+    #objBasket { left: 80%; top: 66%; }
+    #objFirepit { left: 55%; top: 58%; }
+    #objSourjar { left: 34%; top: 63%; }
+
+    /* 底图就绪后主热点按 A3 真实构图就位（bg-ready 由 JS 同步到容器 #indoorHotspots 上） */
+    #indoorHotspots.bg-ready #spotWardrobe { left: 8%; top: 60%; }
+    #indoorHotspots.bg-ready #spotKitchen { left: 50%; right: auto; top: 40%; }
+    #indoorHotspots.bg-ready #spotDoor { left: 79%; top: 28%; }
+
+    /* 厨房近景（A4）作为做饭抽屉的实拍底 */
+    .process-visual.kitchen-photo { background-size: cover; background-position: center 72%; }
 
     .topbar {
       position: absolute;
@@ -336,8 +406,65 @@
 
     #spotWardrobe { left: 17%; top: 49%; }
     #spotKitchen { right: 19%; top: 48%; }
-    #spotGrandma { right: 29%; top: 32%; }
     #spotDoor { left: 48%; top: 23%; }
+
+    /* Semantic Accent Rule：茜红仅用于服饰/人物表达类热点 */
+    .hotspot.outfit { background: var(--madder-red); }
+    .hotspot.outfit:hover { background: oklch(44% .17 10); }
+
+    /* ---------- 轻量物件标记（生图清单 A3/C-2）----------
+       5 个文化物件独立可点；视觉明显小于主热点（30px 圆章 vs 44px 标签胶囊），
+       不计入同屏 Hotspot Action ≤5 上限；命中区仍保 44px（PRD §16）。 */
+    .object-marker {
+      position: absolute;
+      z-index: 11;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .object-marker .disc {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      background: color-mix(in oklch, var(--indigo-ink) 78%, transparent);
+      border: 1px solid color-mix(in oklch, var(--silver) 42%, transparent);
+      border-radius: 50%;
+      color: var(--muted-text);
+      box-shadow: 0 2px 4px rgb(4 10 20 / 28%);
+      transition: background 160ms ease, color 160ms ease, transform 160ms var(--ease-out);
+    }
+
+    .object-marker svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; }
+
+    .object-marker:hover .disc, .object-marker:focus-visible .disc {
+      background: var(--indigo-cloth);
+      color: var(--mist-white);
+      transform: translateY(-1px);
+    }
+
+    .object-marker .marker-label {
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 9px;
+      background: var(--indigo-night);
+      color: var(--mist-white);
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 150ms ease;
+    }
+
+    .object-marker:hover .marker-label, .object-marker:focus-visible .marker-label { opacity: 1; }
 
     .outdoor-hotspot { display: none; }
     #spotSong { left: 29%; top: 29%; }
@@ -359,7 +486,163 @@
       border-radius: 8px;
       box-shadow: var(--shadow-scene);
       transform: translateX(-50%);
+      transition: opacity 180ms var(--ease-out);
     }
+
+    .dialogue-band[hidden] { display: none; }
+
+    /* ---------- Speech Bubble（角色对话气泡） ----------
+       依据 DESIGN.md Components › Speech Bubble：
+       - 锚定 NPC 头顶偏上方，尾巴指向 NPC
+       - cloth-warm / indigo-ink 实底（按场景明暗取高对比的一种），2px 圆角 + 小尾巴
+       - 最大 320px 宽、≤4 行；无名牌；来源为气泡下方 28px 织带标签
+       - 六态：hidden / enter（缝上去 200ms）/ shown / leaving / thinking / ai-open
+       - 与 Dialogue Band 互斥：NPC 对白在气泡时隐藏通栏，反之亦然 */
+
+    .speech-bubble {
+      position: absolute;
+      z-index: 21;
+      max-width: 320px;
+      padding: 13px 16px;
+      background: var(--cloth-warm);
+      color: var(--text-on-cloth);
+      border-radius: 2px;
+      box-shadow: var(--shadow-scene);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px) rotate(1deg);
+    }
+
+    .speech-bubble[hidden] { display: none; }
+
+    .speech-bubble.enter {
+      animation: bubble-stitch 200ms var(--ease-out) forwards;
+    }
+
+    .speech-bubble.shown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+      transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+    }
+
+    .speech-bubble.leaving {
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    @keyframes bubble-stitch {
+      from { opacity: 0; transform: translateY(6px) rotate(1deg); }
+      to { opacity: 1; transform: translateY(0) rotate(0); }
+    }
+
+    /* 尾巴：指向下方 NPC 立绘 */
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      left: var(--tail-x, 24px);
+      bottom: -9px;
+      width: 16px;
+      height: 16px;
+      background: inherit;
+      border-right: 2px solid rgb(4 10 20 / 10%);
+      border-bottom: 2px solid rgb(4 10 20 / 10%);
+      transform: rotate(45deg) skew(8deg, 8deg);
+    }
+
+    .speech-bubble .bubble-text {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .speech-bubble .bubble-hint {
+      display: block;
+      margin-top: 6px;
+      color: color-mix(in oklch, var(--text-on-cloth) 55%, transparent);
+      font-size: 12px;
+    }
+
+    /* 来源织带标签：气泡下方 28px 高 */
+    .bubble-source {
+      position: absolute;
+      top: calc(100% + 14px);
+      left: var(--tail-x, 24px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 12px;
+      background: var(--indigo-cloth);
+      color: var(--mist-white);
+      border: 0;
+      border-radius: 2px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .bubble-source::before { content: "资料"; font-weight: 700; color: var(--sun-ochre); }
+    .bubble-source:hover { background: var(--indigo-ink); }
+
+    /* AI 思考态：三段织线轻微流动 */
+    .speech-bubble.thinking .bubble-text { color: color-mix(in oklch, var(--text-on-cloth) 45%, transparent); }
+
+    .speech-bubble.thinking::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 6px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--river-cyan), transparent);
+      background-size: 40% 100%;
+      background-repeat: no-repeat;
+      animation: thread-flow 1.4s linear infinite;
+    }
+
+    @keyframes thread-flow {
+      from { background-position: -40% 0; }
+      to { background-position: 140% 0; }
+    }
+
+    /* AI 问答扩展层：从气泡上方展开（贴住气泡顶，避免溢出画面） */
+    .bubble-ai {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 12px);
+      transform: translateX(-50%);
+      width: min(360px, 78vw);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      background: var(--indigo-ink);
+      border: 1px solid rgb(255 255 255 / 14%);
+      border-radius: 4px;
+      box-shadow: var(--shadow-near);
+    }
+
+    /* 气泡靠近舞台顶部时，问答层改从下方展开 */
+    .speech-bubble.ai-flip .bubble-ai { bottom: auto; top: calc(100% + 14px); }
+
+    .bubble-ai[hidden] { display: none; }
+
+    .bubble-ai .ai-q {
+      min-height: 44px;
+      padding: 8px 12px;
+      background: var(--indigo-cloth);
+      color: var(--mist-white);
+      border-radius: 4px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .bubble-ai .ai-q:hover { background: oklch(38% .073 257); }
 
     .dialogue-accent { align-self: stretch; background: var(--madder-red); }
 
@@ -865,7 +1148,6 @@
       .dialogue-band { display: none; }
       #spotWardrobe { left: 14%; top: 49%; }
       #spotKitchen { right: 14%; top: 48%; }
-      #spotGrandma { right: 27%; top: 30%; }
     }
 
     @media (orientation: portrait) and (max-width: 900px) {
@@ -892,6 +1174,7 @@
       </svg>
 
       <section class="scene" id="indoorScene" aria-label="室内：清晨的木楼">
+        <div class="scene-bg" id="bgIndoor" role="img" aria-label="场景底图（生图资产就绪后显示）"></div>
         <svg class="scene-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" role="img" aria-label="矢量占位场景：当代施洞木楼室内，衣柜、火塘、祖母和门廊">
           <defs>
             <pattern id="clothLines" width="28" height="28" patternUnits="userSpaceOnUse">
@@ -961,9 +1244,13 @@
           </g>
         </svg>
         <div class="texture-overlay"></div>
+        <!-- NPC 占位色块：立绘资产（B11 外婆 / B12 妈妈）到货后替换为 <img class="char">，气泡锚点选择器不变 -->
+        <div class="npc-placeholder" id="npcGrandma" aria-hidden="true"><span>外婆 · 占位</span></div>
+        <div class="npc-placeholder" id="npcMom" aria-hidden="true"><span>妈妈 · 占位</span></div>
       </section>
 
       <section class="scene" id="outdoorScene" aria-label="室外：清水江畔的节日" hidden>
+        <div class="scene-bg" id="bgOutdoor" role="img" aria-label="场景底图（生图资产就绪后显示）"></div>
         <svg class="scene-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" role="img" aria-label="矢量占位场景：清水江、山坡、节日场地与人群">
           <rect width="1440" height="810" fill="#86a5af"/>
           <circle cx="1138" cy="132" r="62" fill="#d4a85a" opacity=".8"/>
@@ -1006,6 +1293,9 @@
           </g>
         </svg>
         <div class="texture-overlay"></div>
+        <!-- NPC 占位色块：立绘资产（B13 阿月 / B14 阿禾）到货后替换为 <img class="char">，气泡锚点选择器不变 -->
+        <div class="npc-placeholder" id="npcAyue" aria-hidden="true"><span>阿月 · 占位</span></div>
+        <div class="npc-placeholder npc-low" id="npcAhe" aria-hidden="true"><span>阿禾 · 占位</span></div>
       </section>
 
       <header class="topbar">
@@ -1028,10 +1318,18 @@
       </aside>
 
       <div id="indoorHotspots">
-        <button class="hotspot point-left" id="spotWardrobe" type="button" data-action="outfit"><span class="spot-icon"><svg><use href="#i-shirt"/></svg></span><span>挑选盛装</span></button>
+        <button class="hotspot point-left outfit" id="spotWardrobe" type="button" data-action="outfit"><span class="spot-icon"><svg><use href="#i-shirt"/></svg></span><span>挑选盛装</span></button>
         <button class="hotspot point-right" id="spotKitchen" type="button" data-action="meal"><span class="spot-icon"><svg><use href="#i-pot"/></svg></span><span>制作姊妹饭</span></button>
-        <button class="hotspot point-down" id="spotGrandma" type="button" data-action="culture"><span class="spot-icon"><svg><use href="#i-chat"/></svg></span><span>问问外婆</span></button>
         <button class="hotspot point-down" id="spotDoor" type="button" data-action="door" disabled><span class="spot-icon"><svg><use href="#i-door"/></svg></span><span>还不能出门</span></button>
+      </div>
+
+      <!-- 轻量物件标记：5 个文化物件独立可点（生图清单 A3/C-2），外婆作答；不计入主热点上限 -->
+      <div id="objectMarkers">
+        <button class="object-marker" id="objHairpin" type="button" data-object="hairpin" aria-label="银簪：问问外婆"><span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20 18 6m-2-2 4 4M5 15l4 4"/></svg></span><span class="marker-label">银簪 · 问问外婆</span></button>
+        <button class="object-marker" id="objEmbroidery" type="button" data-object="embroidery" aria-label="绣片：问问外婆"><span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 19 7-14 7 14M8 13h8M6.5 16h11"/></svg></span><span class="marker-label">绣片 · 问问外婆</span></button>
+        <button class="object-marker" id="objBasket" type="button" data-object="basket" aria-label="姊妹饭竹篮：问问外婆"><span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-2 9H6l-2-9ZM8 10c0-4 2-6 4-6s4 2 4 6M9 14v3M12 14v3M15 14v3"/></svg></span><span class="marker-label">姊妹饭竹篮 · 问问外婆</span></button>
+        <button class="object-marker" id="objFirepit" type="button" data-object="firepit" aria-label="火塘：问问外婆"><span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-3.5 0-6-2.3-6-5.5 0-2.6 1.8-4.3 3.2-6C10.5 7.9 12 6 12 3c2.5 2.4 6 5.5 6 9.5 0 2-1 3.5-2 4.5M12 21c1.7 0 3-1.2 3-3 0-1.6-1.3-2.8-3-4.5-1.7 1.7-3 2.9-3 4.5 0 1.8 1.3 3 3 3Z"/></svg></span><span class="marker-label">火塘 · 问问外婆</span></button>
+        <button class="object-marker" id="objSourjar" type="button" data-object="sourjar" aria-label="酸汤坛：问问外婆"><span class="disc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h6M8 6c-2 1.8-3 4-3 7 0 4.4 3.1 8 7 8s7-3.6 7-8c0-3-1-5.2-3-7M10 3h4M7 13h10"/></svg></span><span class="marker-label">酸汤坛 · 问问外婆</span></button>
       </div>
 
       <div id="outdoorHotspots">
@@ -1045,6 +1343,13 @@
         <p class="dialogue-text" id="dialogueText">饭要蒸好，衣裳也要穿稳。今天，是我第一次自己准备好再去江边。</p>
         <span class="dialogue-hint">点击场景标签开始</span>
       </section>
+
+      <!-- Speech Bubble：NPC 对话气泡（锚定 NPC 立绘头顶；资产未到时锚定占位色块） -->
+      <div class="speech-bubble" id="speechBubble" role="status" aria-live="polite" hidden>
+        <p class="bubble-text" id="bubbleText"></p>
+        <span class="bubble-hint" id="bubbleHint">点击继续</span>
+        <button class="bubble-source" id="bubbleSource" type="button" hidden>查看来源</button>
+      </div>
 
       <div class="drawer-backdrop" id="drawerBackdrop"></div>
       <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
@@ -1170,10 +1475,125 @@
         return String(value).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" })[char]);
       }
 
-      function say(name, text) {
-        speaker.textContent = name;
-        dialogueText.textContent = text;
+      /* ---------- 对话双通道（DESIGN.md：Speech Bubble / Dialogue Band 分工与互斥） ---------- */
+
+      /* NPC 注册表：key → 当前场景内的固定锚点（立绘元素或占位色块）。
+         资产到货后，只需把 anchor 换成立绘节点的选择器，气泡逻辑不用动。 */
+      const NPCS = {
+        外婆: { scene: "indoor", anchor: "#npcGrandma", tail: 26 },
+        妈妈: { scene: "indoor", anchor: "#npcMom", tail: 26 },
+        阿月: { scene: "outdoor", anchor: "#npcAyue", tail: 24 },
+        阿禾: { scene: "outdoor", anchor: "#npcAhe", tail: 24 }
+      };
+
+      const bubble = $("#speechBubble");
+      const bubbleText = $("#bubbleText");
+      const bubbleHint = $("#bubbleHint");
+      const bubbleSource = $("#bubbleSource");
+
+      /* 六态之一：hidden（两个通道都不可见，供转场/换页使用） */
+      function hideBoth() {
+        bubble.classList.remove("enter", "shown", "leaving", "thinking");
+        bubble.hidden = true;
+        bubbleSource.hidden = true;
+        dialogueBand.hidden = true;
+      }
+
+      /* 旁白 / 内心独白 / 无同屏说话对象 → Dialogue Band（默认通道） */
+      function narrate(text) {
+        bubble.classList.remove("enter", "shown", "leaving", "thinking");
+        bubble.hidden = true;
+        bubbleSource.hidden = true;
         dialogueBand.hidden = !state.subtitles;
+        speaker.textContent = "旁白";
+        dialogueText.textContent = text;
+      }
+
+      /* NPC 对白 → Speech Bubble（锚定头顶，多句在同一气泡内翻页） */
+      function npcSay(name, lines, options = {}) {
+        const npc = NPCS[name];
+        if (!npc || state.scene !== npc.scene) { narrate(lines[0]); return; }
+        const anchor = document.querySelector(npc.anchor);
+        if (!anchor || anchor.hidden) { narrate(lines[0]); return; }
+
+        const stageBox = stage.getBoundingClientRect();
+        const box = anchor.getBoundingClientRect();
+        const stageRect = { w: stage.offsetWidth, h: stage.offsetHeight };
+        const scale = stageRect.w / stageBox.width || 1;
+
+        /* 气泡定位：头顶偏上方；尾巴水平位置随锚点局部坐标（--tail-x） */
+        const anchorCx = (box.left + box.width / 2 - stageBox.left) * (stageRect.w / stageBox.width);
+        const anchorTop = (box.top - stageBox.top) * (stageRect.h / stageBox.height);
+        const lift = options.lift ?? (box.height * (stageRect.h / stageBox.height)) + 14;
+
+        bubble.style.left = `${Math.round(Math.min(Math.max(anchorCx - 60, 16), stageRect.w - 336))}px`;
+        const top = Math.round(Math.max(anchorTop - lift - 86, 96));
+        bubble.style.top = `${top}px`;
+        bubble.classList.toggle("ai-flip", top < 300); /* 顶部空间不足时问答层翻到气泡下方 */
+        bubble.style.setProperty("--tail-x", `${npc.tail}px`);
+
+        bubble.classList.remove("enter", "shown", "leaving", "thinking");
+        clearTimeout(bubble._leaveTimer);
+        bubble.hidden = false;
+        bubble.classList.add("enter");
+        requestAnimationFrame(() => bubble.classList.add("shown"));
+        bubble.classList.remove("enter");
+
+        bubbleText.textContent = lines[0];
+        bubbleHint.textContent = lines.length > 1 ? `点击继续（${1}/${lines.length}）` : (options.hint ?? "点击继续");
+        bubbleSource.hidden = !options.source;
+
+        dialogueBand.hidden = true; /* 互斥：NPC 对白在气泡时隐藏通栏 */
+        bubble._lines = lines;
+        bubble._index = 0;
+        bubble._options = options;
+        bubble._npc = name;
+        bubble._fallback = options.fallback ?? null;
+      }
+
+      function bubbleAdvance() {
+        if (bubble.hidden) return;
+        const lines = bubble._lines || [bubbleText.textContent];
+        if (bubble._index < lines.length - 1) {
+          bubble._index += 1;
+          bubbleText.textContent = lines[bubble._index];
+          bubbleHint.textContent = `点击继续（${bubble._index + 1}/${lines.length}）`;
+          return;
+        }
+        bubble.classList.add("leaving");
+        bubble.classList.remove("shown");
+        const wasAiAnswer = Boolean(bubble._options?.source);
+        clearTimeout(bubble._leaveTimer);
+        bubble._leaveTimer = setTimeout(() => {
+          bubble.classList.remove("leaving");
+          bubble.hidden = true;
+          bubbleSource.hidden = true;
+          closeBubbleAi();
+          if (bubble._fallback) narrate(bubble._fallback); /* 气泡说完把频道交回通栏，避免画面无字幕 */
+          if (typeof bubble._options?.onDone === "function") bubble._options.onDone();
+        }, state.reducedMotion ? 0 : 170);
+      }
+
+      bubble.addEventListener("click", bubbleAdvance);
+      /* 来源织带：打开当前物件的知识来源抽屉（原型资料 · 待当地复核），不触发气泡推进 */
+      bubbleSource.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const obj = bubble._object;
+        const links = obj?.sources ?? Object.values(SOURCE_LINKS);
+        setDrawer("文化来源", `「${obj?.name ?? "文化问答"}」的依据`, `
+          <p class="drawer-copy">外婆的回答只来自审核资料条目。以下条目当前为<b>原型资料 · 待当地复核</b>状态，正式发布前须由施洞当地文化工作者复核（PRD §9/§20）。</p>
+          <ul class="settings-list" style="margin-top:14px">
+            ${links.map((link) => `<li class="setting-row"><span style="font-size:14px">${escapeHtml(link.org)} · ${escapeHtml(link.title)}</span><a class="bubble-source" style="position:static" href="${link.url}" target="_blank" rel="noopener">打开</a></li>`).join("")}
+          </ul>
+          <div class="action-row"><button class="primary" id="srcDone" type="button">回到外婆</button></div>
+        `);
+        $("#srcDone").addEventListener("click", closeDrawer);
+      });
+
+      /* 统一入口：NPC 名单内的说话人走气泡，其余走底部通栏 */
+      function say(name, text, options) {
+        if (NPCS[name]) npcSay(name, Array.isArray(text) ? text : [text], options);
+        else narrate(text);
       }
 
       function toast(text) {
@@ -1199,8 +1619,7 @@
         if (state.scene === "indoor") {
           const hotspotLabels = {
             meal: ["#spotKitchen", "制作姊妹饭", "已完成 · 姊妹饭"],
-            outfit: ["#spotWardrobe", "挑选盛装", "已完成 · 节日盛装"],
-            culture: ["#spotGrandma", "问问外婆", "已完成 · 问过外婆"]
+            outfit: ["#spotWardrobe", "挑选盛装", "已完成 · 节日盛装"]
           };
           Object.entries(hotspotLabels).forEach(([key, [selector, idle, done]]) => {
             const hotspot = $(selector);
@@ -1256,7 +1675,7 @@
         setDrawer("室内任务 · 厨房", "制作姊妹饭", `
           ${stepper(["选色", "蒸制", "装篮"], mealStep)}
           <p class="drawer-copy">${copy[mealStep]}</p>
-          <div class="process-visual ${mealStep === 1 ? "cooking" : ""}" style="--rice-color:${state.mealColorHex}">
+          <div class="process-visual ${mealStep === 1 ? "cooking" : ""} ${kitchenBgUrl ? "kitchen-photo" : ""}" style="--rice-color:${state.mealColorHex};${kitchenBgUrl ? `background-image:url(${kitchenBgUrl})` : ""}">
             <i class="steam one"></i><i class="steam two"></i><i class="steam three"></i><div class="rice-bowl" aria-hidden="true"></div>
           </div>
           ${mealStep === 0 ? `<div class="choice-grid">${colors.map(([name, note, cls, hex]) => `<button class="choice ${state.mealColor === name ? "selected" : ""}" type="button" data-rice="${name}" data-hex="${hex}"><span class="swatch ${cls}"></span><span><strong>${name}</strong><small>${note} · 矢量色票占位</small></span></button>`).join("")}</div>` : ""}
@@ -1291,7 +1710,7 @@
           state.indoor.meal = true;
           renderTasks();
           closeDrawer();
-          say("阿岚", `姊妹饭装好了。我选的是${state.mealColor}，到了江边再把这份心意送出去。`);
+          narrate(`姊妹饭装好了。我选的是${state.mealColor}，到了江边再把这份心意送出去。`);
           toast("任务完成：蒸好姊妹饭");
         });
         $("#mealBack")?.addEventListener("click", () => { mealStep -= 1; renderMeal(); });
@@ -1330,39 +1749,162 @@
           state.indoor.outfit = true;
           renderTasks();
           closeDrawer();
-          say("外婆", "衣裳不是穿得越满越好。站稳、走稳，知道自己为什么穿，才算准备好。");
-          toast("任务完成：穿好节日盛装");
-        });
+          say("外婆", "衣裳不是穿得越满越好。站稳、走稳，知道自己为什么穿，才算准备好。", { fallback: "外婆看了看我身上的盛装，点了点头。" });
+          toast("任务完成：穿好节日盛装");        });
         $("#outfitBack")?.addEventListener("click", () => { outfitStep -= 1; renderOutfit(); });
       }
 
-      function renderCulture() {
-        const qa = [
-          ["为什么今天穿盛装？", "施洞苗族女盛装用于姊妹节踩鼓场、婚礼等特定场合。它不是每天整套佩戴的“民族标签”，而是与场合、家庭和社群关系相连。"],
-          ["姊妹饭是做什么的？", "在姊妹节里，姊妹饭与相聚、交往和表达心意有关。不同颜色或夹带物件的细分含义常见于民间讲述，但正式版会逐条请当地文化顾问确认。"],
-          ["银簪平时也能戴吗？", "银簪既能在盛装中形成完整造型，也有固定头发的实际功能。具体尺寸、组合和使用场合因地区与服饰体系而异，不能混成一套通用答案。"]
-        ];
-        const selected = qa.find(([question]) => question === state.question);
-        setDrawer("文化对话 · 离线兜底", "问问外婆", `
-          <p class="drawer-copy">选一个真正想知道的问题。当前 Demo 使用经过边界处理的预设回答；未来 AI 只能从审核知识库检索，不会编造苗语、苗歌或习俗。</p>
-          <div class="qa-list">${qa.map(([question]) => `<button class="choice ${state.question === question ? "selected" : ""}" type="button" data-question="${question}"><span><strong>${question}</strong><small>查看简短回答</small></span><span aria-hidden="true">→</span></button>`).join("")}</div>
-          ${selected ? `<div class="answer-box"><strong>外婆：</strong><br>${selected[1]}</div><p class="source-note">原型依据项目调研摘要整理；涉及地方性细节的句子已标注为“待当地核验”。</p><div class="action-row"><button class="primary" id="cultureDone" type="button">记住这件事</button></div>` : ""}
-        `);
-        $$('[data-question]').forEach((button) => button.addEventListener("click", () => { state.question = button.dataset.question; renderCulture(); }));
-        $("#cultureDone")?.addEventListener("click", () => {
-          state.indoor.culture = true;
-          renderTasks();
-          closeDrawer();
-          say("阿岚", "我记住了。传统不是一件不许碰的旧东西，它有自己的时间、地方和用法。");
-          toast("任务完成：向外婆问了一件事");
+      /* 文化物件知识库：剧情文本 §三 原样接入（回答文案未做任何改写）。
+         sources 为 PRD §9.4 公开资料；全部条目当前状态 = 原型资料 · 待当地复核。 */
+      const SOURCE_LINKS = {
+        taijiangSisters: { org: "台江县人民政府", title: "《姊妹节》", url: "https://www.gztaijiang.gov.cn/cbagx/jrxs/202310/t20231019_82818665.html" },
+        gzmuseumSilver: { org: "贵州省博物馆", title: "《馆藏台江施洞苗族女盛装银饰》", url: "https://zg.gzmuseum.com/gbyw/202507/1071.html" },
+        taijiangSour: { org: "台江县人民政府", title: "《苗族酸汤》", url: "https://www.gztaijiang.gov.cn/cbagx/tjly/msjs/202403/t20240320_83968488.html" },
+        ihchina: { org: "中国非物质文化遗产网", title: "中国非物质文化遗产数字博物馆", url: "https://www.ihchina.cn/" }
+      };
+
+      const CULTURE_OBJECTS = {
+        hairpin: {
+          name: "银簪",
+          prompt: "想问哪样？点上面的问。",
+          qa: [
+            ["这支银簪是哪样时候戴的？", "这是盛装时候的簪子。大日子才戴，平时收在盒盒头。"],
+            ["是你年轻时候的吗？", "我戴了几十年咯。是哪样来的，你以后去问你妈妈。"],
+            ["为哪样节日要戴银饰？", "银饰是盛装的一部分。姊妹节这样的大日子，衣裳要齐整，头上也要齐整。"]
+          ],
+          sources: [SOURCE_LINKS.gzmuseumSilver, SOURCE_LINKS.ihchina]
+        },
+        embroidery: {
+          name: "绣片",
+          prompt: "想问哪样？点上面的问。",
+          qa: [
+            ["这块绣片是哪样绣的？", "一针一针绣的。学绣花没有捷径，先是学拆，再学绣。"],
+            ["是谁绣的？", "我绣过，你妈妈的嫁妆绣片也有我绣的。你自家以后也要学。"],
+            ["绣片上的花纹是哪样意思？", "有些花样是有讲法的。这一块的讲法我讲不准，不敢乱讲给你听。"]
+          ],
+          sources: [SOURCE_LINKS.ihchina]
+        },
+        basket: {
+          name: "姊妹饭竹篮",
+          prompt: "想问哪样？点上面的问。",
+          qa: [
+            ["为哪样姊妹饭要装竹篮？", "竹篮透气，饭不馊。拿去歌场，也好看、好递。"],
+            ["姊妹饭和普通糯米饭有哪样不同？", "姊妹饭是节日的饭。染了色，装了篮，是要拿去送人的。"],
+            ["饭里头可以放东西吗？", "老辈子有放东西的讲法。具体放哪样、是哪样意思，我讲不准，不敢跟你乱讲。"]
+          ],
+          sources: [SOURCE_LINKS.taijiangSisters]
+        },
+        firepit: {
+          name: "火塘",
+          prompt: "想问哪样？点上面的问。",
+          qa: [
+            ["火塘为哪样一年到头不熄？", "火塘是屋头的心。煮饭、烤火、一家人坐拢讲话，都在这点。"],
+            ["我小时候是不是也坐在这点？", "你小时候就坐我腿上，烤火听故事。如今换你讲给我听了。"]
+          ],
+          sources: [SOURCE_LINKS.ihchina]
+        },
+        sourjar: {
+          name: "酸汤坛",
+          prompt: "想问哪样？点上面的问。",
+          qa: [
+            ["这个坛坛头装的是哪样？", "酸汤。我们这边人讲「三天不吃酸，脚打闪闪」。"],
+            ["酸汤是哪样来的？", "米汤、菜养出来的，越养越香。坛子要干净，手也要干净。"]
+          ],
+          sources: [SOURCE_LINKS.taijiangSour]
+        }
+      };
+
+      function openObject(key) {
+        const obj = CULTURE_OBJECTS[key];
+        if (!obj) return;
+        obj.id = key; /* 供 /api/ask 定位知识条目 */
+        npcSay("外婆", [obj.prompt], { hint: "点上方问题问外婆", fallback: "外婆低头继续手里的活。" });
+        openBubbleAi(obj);
+      }
+
+      /* AI 路径（ADR-004）：外婆问答优先走 /api/ask 代理，6s 超时；任何失败都落到
+         answerObject 的现有离线预设，兜底逻辑零改动。file:// 或无 api 的静态托管下
+         fetch 必然失败，自然回落离线——demo 双击可玩与纯静态部署不受影响。 */
+      const AI_ENABLED = /^https?:$/.test(location.protocol);
+      let askSeq = 0;
+
+      function askGrandma(obj, question, presetAnswer) {
+        if (!AI_ENABLED) { answerObject(obj, question, presetAnswer); return; }
+        const seq = ++askSeq;
+        npcSay("外婆", ["……"], { hint: "", fallback: null });
+        bubble.classList.add("thinking");
+        const thinkTimer = setTimeout(() => {
+          if (seq === askSeq && bubble.classList.contains("thinking")) bubbleText.textContent = "外婆想了想……";
+        }, 2000);
+        const ctrl = new AbortController();
+        const fetchTimer = setTimeout(() => ctrl.abort(), 6000);
+        fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ objectId: obj.id, question }),
+          signal: ctrl.signal
+        }).then((resp) => resp.ok ? resp.json() : Promise.reject(resp.status)).then((data) => {
+          if (seq !== askSeq) return;
+          clearTimeout(thinkTimer);
+          const aiAnswer = data && data.status === "ai" && typeof data.answer === "string" && data.answer.trim();
+          answerObject(obj, question, aiAnswer ? data.answer.trim() : presetAnswer);
+        }).catch(() => {
+          if (seq !== askSeq) return;
+          clearTimeout(thinkTimer);
+          answerObject(obj, question, presetAnswer);
+        }).finally(() => clearTimeout(fetchTimer));
+      }
+
+      function answerObject(obj, question, answer) {
+        const firstTime = !state.indoor.culture;
+        state.indoor.culture = true;
+        state.question = `${obj.name}：${question}`;
+        renderTasks();
+        npcSay("外婆", [answer], {
+          source: true,
+          hint: "点击收起",
+          fallback: firstTime ? "好咯，去做你的事。" : "还有哪样想问的，随时问。"
         });
+        bubble._object = obj; /* 来源织带按物件出依据 */
+        if (firstTime) toast("任务完成：向外婆问了一件事");
+      }
+
+      /* AI 问答层挂在外婆气泡容器内；ai-flip 时从气泡下方展开。按物件注入各自问题。 */
+      function openBubbleAi(obj) {
+        let layer = $("#bubbleAi");
+        if (!layer) {
+          layer = document.createElement("div");
+          layer.className = "bubble-ai";
+          layer.id = "bubbleAi";
+          bubble.appendChild(layer);
+        }
+        layer.innerHTML = `<p style="margin:0;color:var(--muted-text);font-size:13px">问外婆 · ${escapeHtml(obj.name)}（离线资料 · 待当地复核）</p>` +
+          obj.qa.map(([q]) => `<button class="ai-q" type="button" data-aiq="${escapeHtml(q)}">${escapeHtml(q)}</button>`).join("");
+        layer.hidden = false;
+        bubble._object = obj;
+        /* 若展开后溢出舞台底部，再翻回气泡上方 */
+        requestAnimationFrame(() => {
+          const r = layer.getBoundingClientRect(), s = stage.getBoundingClientRect();
+          if (r.bottom > s.bottom - 8) bubble.classList.add("ai-flip");
+        });
+        $$("[data-aiq]").forEach((button) => button.addEventListener("click", (event) => {
+          event.stopPropagation(); /* 问题点击不得冒泡成"推进气泡" */
+          const found = obj.qa.find(([q]) => q === button.dataset.aiq);
+          closeBubbleAi();
+          askGrandma(obj, found[0], found[1]);
+        }));
+      }
+
+      function closeBubbleAi() {
+        const layer = $("#bubbleAi");
+        if (layer) layer.hidden = true;
       }
 
       function renderSong() {
         const intents = ["把祝福送给朋友", "把勇气留给自己", "谢谢家人的陪伴"];
         const lyrics = [
           "先听场地里的歌声。正式版本会使用经授权的当地录音或由文化顾问审核的内容。",
-          "现在选择一句“回声意象”。它不是伪造的苗歌翻译，只代表阿岚此刻想表达的心情。",
+          "现在选择一句「回声意象」。它不是伪造的苗歌翻译，只代表阿岚此刻想表达的心情。",
           "你的回声已经准备好。它不会改变结局，但会成为今天属于你的那一处细节。"
         ];
         setDrawer("室外任务 · 对歌场", "听见，再回应", `
@@ -1376,7 +1918,7 @@
           </div>
           ${songStep === 0 ? `<div class="answer-box">♪ 风从江面来，人群的歌声在木楼之间接续。<br><small>音频资产暂未接入，字幕完整保留信息。</small></div>` : ""}
           ${songStep === 1 ? `<div class="choice-grid">${intents.map((intent) => `<button class="choice ${state.intent === intent ? "selected" : ""}" type="button" data-intent="${intent}"><strong>${intent}</strong></button>`).join("")}</div>` : ""}
-          ${songStep === 2 ? `<div class="answer-box">江水记住来路，饭香记住清晨。<br>阿岚想：${escapeHtml(state.intent)}。</div><p class="source-note">“回声诗”是当代互动文案，不冒充传统苗歌或苗语翻译。</p>` : ""}
+          ${songStep === 2 ? `<div class="answer-box">江水记住来路，饭香记住清晨。<br>阿岚想：${escapeHtml(state.intent)}。</div><p class="source-note">「回声诗」是当代互动文案，不冒充传统苗歌或苗语翻译。</p>` : ""}
           <div class="action-row"><button class="primary" id="songNext" type="button">${songStep === 2 ? "完成回应" : "继续"}</button>${songStep > 0 ? `<button class="ghost" id="songBack" type="button">上一步</button>` : ""}</div>
         `);
         $$('[data-intent]').forEach((button) => button.addEventListener("click", () => { state.intent = button.dataset.intent; renderSong(); }));
@@ -1385,7 +1927,7 @@
           state.outdoor.song = true;
           renderTasks();
           closeDrawer();
-          say("阿岚", "我不用唱得和谁一样。先听见别人，再把自己的话稳稳送出去。");
+          narrate("我不用唱得和谁一样。先听见别人，再把自己的话稳稳送出去。");
           toast("任务完成：听见并回应");
         });
         $("#songBack")?.addEventListener("click", () => { songStep -= 1; renderSong(); });
@@ -1393,7 +1935,7 @@
 
       function renderGift() {
         setDrawer("室外任务 · 清水江畔", "赠出姊妹饭", `
-          <p class="drawer-copy">把清晨准备好的那一篮饭送出去。这里不设置“正确对象”或好感度，重点是完成一次带着个人心意的赠予。</p>
+          <p class="drawer-copy">把清晨准备好的那一篮饭送出去。这里不设置「正确对象」或好感度，重点是完成一次带着个人心意的赠予。</p>
           <div class="process-visual" style="--rice-color:${state.mealColorHex}"><div class="rice-bowl" aria-hidden="true"></div></div>
           <div class="answer-box">饭的颜色：${escapeHtml(state.mealColor)}<br>想表达：${escapeHtml(state.intent)}</div>
           <p class="source-note">赠礼的具体礼俗与物件含义将在正式内容阶段继续核验；本原型只展示交互结构。</p>
@@ -1403,7 +1945,7 @@
           state.outdoor.gift = true;
           renderTasks();
           closeDrawer();
-          say("阿岚", "原来准备好的意义，不是证明我会多少，而是我终于能把一份心意交到别人手里。");
+          narrate("原来准备好的意义，不是证明我会多少，而是我终于能把一份心意交到别人手里。");
           toast("这一天的任务完成了");
           setTimeout(showEnding, state.reducedMotion ? 20 : 1200);
         });
@@ -1440,7 +1982,7 @@
 
       function renderHelp() {
         setDrawer("操作说明", "在场景中行动", `
-          <p class="drawer-copy">点击靠近物件的河青标签进入互动。室内三件事没有固定顺序，全部完成后门才会开启。</p>
+          <p class="drawer-copy">点击靠近物件的河青标签进入互动。银簪、绣片、竹篮、酸汤坛、火塘这些小圆标记也可以直接点，外婆会在原地答你。室内三件事没有固定顺序，全部完成后门才会开启。</p>
           <div class="answer-box"><strong>鼠标 / 触摸</strong><br>点击场景标签和面板选项。<br><br><strong>键盘</strong><br>按 Tab 移动焦点，Enter 或空格确认，Esc 关闭侧栏。</div>
           <p class="source-note">颜色之外同时提供文字和勾选状态；所有关键对白都有字幕。</p>
           <div class="action-row"><button class="primary" id="helpDone" type="button">知道了</button></div>
@@ -1459,7 +2001,7 @@
         $("#sceneTitle").textContent = "走进姊妹节";
         $("#sceneTime").textContent = "清水江畔 · 11:40";
         renderTasks();
-        say("阿岚", "江边比我想的更热闹。先不急着把饭送出去，我想听一听大家怎么唱。");
+        narrate("江边比我想的更热闹。先不急着把饭送出去，我想听一听大家怎么唱。");
         toast("新场景：清水江畔");
       }
 
@@ -1489,7 +2031,7 @@
         $("#sceneTime").textContent = "姊妹节当天 · 08:10";
         document.body.classList.toggle("reduce-motion", state.reducedMotion);
         renderTasks();
-        say("阿岚", "饭要蒸好，衣裳也要穿稳。今天，是我第一次自己准备好再去江边。");
+        narrate("饭要蒸好，衣裳也要穿稳。今天，是我第一次自己准备好再去江边。");
         $("#spotWardrobe").focus();
       }
 
@@ -1498,11 +2040,13 @@
         const action = button.dataset.action;
         if (action === "meal") renderMeal();
         if (action === "outfit") renderOutfit();
-        if (action === "culture") renderCulture();
         if (action === "door") goOutdoor();
         if (action === "song") renderSong();
         if (action === "gift") renderGift();
       }));
+
+      /* 轻量物件标记：独立点击，外婆作答（回答者）；不改变任务面板结构 */
+      $$('[data-object]').forEach((button) => button.addEventListener("click", () => openObject(button.dataset.object)));
 
       $("#closeDrawer").addEventListener("click", closeDrawer);
       drawerBackdrop.addEventListener("click", closeDrawer);
@@ -1519,6 +2063,53 @@
       });
 
       document.body.classList.toggle("reduce-motion", state.reducedMotion);
+
+      /* ---------- 场景资产挂载（生图清单第一批：A2/A3/A4/A8） ----------
+         先到先接：加载成功才替换占位 SVG；失败则保留占位，不阻塞可玩。 */
+      const SCENE_IMAGES = [
+        ["A3", "assets/scene/堂屋枢纽-v1.webp", () => {
+          $("#indoorScene").classList.add("bg-ready");
+          $("#indoorHotspots").classList.add("bg-ready");
+        }],
+        ["A8", "assets/scene/节日场地-v1.webp", () => {
+          $("#outdoorScene").classList.add("bg-ready");
+        }],
+        ["A4", "assets/scene/厨房近景-v1.webp", () => {}],
+        /* A2 清晨卧房：demo 未设独立卧房场景（S1 并入堂屋入场），资产留作 S1 扩展，暂不挂载 */
+        ["A2", "assets/scene/清晨卧房-v1.webp", null]
+      ];
+      let kitchenBgUrl = null;
+      for (const [code, src, onReady] of SCENE_IMAGES) {
+        const img = new Image();
+        img.onload = () => {
+          if (code === "A3") applySceneBg("#bgIndoor", src);
+          if (code === "A8") applySceneBg("#bgOutdoor", src);
+          if (code === "A4") kitchenBgUrl = src;
+          onReady?.();
+        };
+        img.src = src;
+      }
+
+      /* 立绘挂载（B1 女主便装基底）：A3 中部女主站位；B11 外婆不重复挂载（A3 底图已含火塘外婆） */
+      const heroImg = new Image();
+      heroImg.onload = () => {
+        const node = document.createElement("img");
+        node.className = "char";
+        node.id = "charHeroine";
+        node.src = heroImg.src;
+        node.alt = "阿岚的便装立绘";
+        node.style.left = "40%";
+        $("#indoorScene").appendChild(node);
+      };
+      heroImg.src = "assets/char/女主便装基底-v1.webp";
+
+      function applySceneBg(mountSelector, src) {
+        const mount = $(mountSelector);
+        if (!mount) return;
+        mount.style.backgroundImage = `url("${src}")`;
+        mount.classList.add("ready");
+      }
+
       renderTasks();
     })();
   </script>

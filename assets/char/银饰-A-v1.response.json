@@ -1,0 +1,13 @@
+{
+  "asset_id": "B9-A",
+  "version": "v1",
+  "generation_type": "reference_guided_high_risk_placeholder",
+  "generated_at": "2026-08-29",
+  "source_output": "/home/freya/.codex/generated_images/01a046f0-5424-73d1-a091-33b74ff24965/exec-ab383d06-7394-4fe4-b70d-457f09122655.png",
+  "references": ["assets/char/盛装基底-v1-green.png", "assets/ui-directions/B-textile-memory.png"],
+  "local_processing": "scale 275x448; pad at 354,195 to 983x1601; chromakey 0.24; despill; WebP q88",
+  "files": {"green_master": "assets/char/银饰-A-v1-green.png", "transparent_png": "assets/char/银饰-A-v1.png", "deployment_webp": "assets/char/银饰-A-v1.webp", "record": "assets/char/银饰-A-v1.md"},
+  "canvas": {"width": 983, "height": 1601},
+  "validation": "overlay_pass",
+  "review_status": "high_risk_cultural_review_required"
+}

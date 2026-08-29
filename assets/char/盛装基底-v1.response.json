@@ -1,0 +1,25 @@
+{
+  "asset_id": "B4",
+  "name": "盛装基底",
+  "version": "v1",
+  "generation_type": "identity_preserve_edit",
+  "generated_at": "2026-08-29",
+  "source_output": "/home/freya/.codex/generated_images/01a046f0-5424-73d1-a091-33b74ff24965/exec-41fc6509-402f-4ae0-ae73-081cddf80902.png",
+  "references": [
+    "assets/char/女主便装基底-v1-green.png",
+    "assets/ui-directions/B-textile-memory.png"
+  ],
+  "files": {
+    "green_master": "assets/char/盛装基底-v1-green.png",
+    "transparent_png": "assets/char/盛装基底-v1.png",
+    "deployment_webp": "assets/char/盛装基底-v1.webp",
+    "record": "assets/char/盛装基底-v1.md"
+  },
+  "canvas": {
+    "width": 983,
+    "height": 1601
+  },
+  "alpha": true,
+  "validation": "accepted_as_culturally_neutral_dressup_foundation",
+  "review_status": "visual_pass_layer_alignment_pending"
+}

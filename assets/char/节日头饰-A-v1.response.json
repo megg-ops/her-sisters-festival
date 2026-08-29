@@ -1,0 +1,13 @@
+{
+  "asset_id": "B8-A",
+  "version": "v1",
+  "generation_type": "reference_guided_high_risk_placeholder",
+  "generated_at": "2026-08-29",
+  "source_output": "/home/freya/.codex/generated_images/01a046f0-5424-73d1-a091-33b74ff24965/exec-a5aad4ac-e8c6-41e2-8741-2ba58bdaa481.png",
+  "references": ["assets/char/盛装基底-v1-green.png", "assets/char/发式发簪-A-v1-green.png", "assets/ui-directions/B-textile-memory.png"],
+  "local_processing": "scale 639x1040; pad at 172,0 to 983x1601; chromakey 0.24; despill; WebP q88",
+  "files": {"green_master": "assets/char/节日头饰-A-v1-green.png", "transparent_png": "assets/char/节日头饰-A-v1.png", "deployment_webp": "assets/char/节日头饰-A-v1.webp", "record": "assets/char/节日头饰-A-v1.md"},
+  "canvas": {"width": 983, "height": 1601},
+  "validation": "overlay_pass",
+  "review_status": "high_risk_cultural_review_required"
+}

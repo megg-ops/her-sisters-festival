@@ -1,0 +1,13 @@
+{
+  "asset_id": "B6-B",
+  "version": "v1",
+  "generation_type": "reference_guided_variant_with_layout_correction",
+  "generated_at": "2026-08-29",
+  "source_output": "/home/freya/.codex/generated_images/01a046f0-5424-73d1-a091-33b74ff24965/exec-f6605605-da72-4b6f-b9fe-f164179b3004.png",
+  "references": ["assets/char/围腰绣片-A-v1-green.png", "assets/char/衣裙-B-v1-green.png"],
+  "local_processing": "scale 658x768; pad at 162,366 to 983x1601; chromakey 0.24; despill; WebP q88",
+  "files": {"green_master": "assets/char/围腰绣片-B-v1-green.png", "transparent_png": "assets/char/围腰绣片-B-v1.png", "deployment_webp": "assets/char/围腰绣片-B-v1.webp", "record": "assets/char/围腰绣片-B-v1.md"},
+  "canvas": {"width": 983, "height": 1601},
+  "validation": "overlay_pass",
+  "review_status": "cultural_review_pending"
+}

@@ -1,0 +1,78 @@
+{
+  "scene": "A3 堂屋枢纽",
+  "image": "assets/scene/堂屋枢纽-v1.png",
+  "canvas": {
+    "width": 1672,
+    "height": 941,
+    "origin": "top-left",
+    "units": "pixels"
+  },
+  "hotspots": [
+    {
+      "id": "C9",
+      "name": "银簪",
+      "scene_object": "闭合木质簪盒",
+      "anchor": { "x": 553, "y": 436 },
+      "anchor_percent": { "x": 33.07, "y": 46.33 },
+      "visible_bounds": { "x": 505, "y": 410, "width": 96, "height": 52 },
+      "recommended_hitbox": { "x": 493, "y": 396, "width": 120, "height": 80 },
+      "visibility": "container-visible-content-hidden",
+      "confidence": "high",
+      "closeup_asset": "assets/prop/银簪-v1.webp",
+      "note": "簪盒清楚可见，但银簪本体未画出；点击盒体后展示独立特写。"
+    },
+    {
+      "id": "C10",
+      "name": "绣片",
+      "scene_object": "矮桌上的绣篮与深靛布",
+      "anchor": { "x": 426, "y": 600 },
+      "anchor_percent": { "x": 25.48, "y": 63.76 },
+      "visible_bounds": { "x": 357, "y": 566, "width": 137, "height": 68 },
+      "recommended_hitbox": { "x": 344, "y": 550, "width": 164, "height": 100 },
+      "visibility": "basket-and-cloth-visible-stitches-not-legible",
+      "confidence": "high",
+      "closeup_asset": "assets/prop/绣片-v1.webp",
+      "note": "篮与布可辨，针脚无法在场景尺度阅读；点击后展示独立特写。"
+    },
+    {
+      "id": "C11",
+      "name": "竹篮·问答用",
+      "scene_object": "大门左侧前景的盛布竹篮",
+      "anchor": { "x": 1394, "y": 702 },
+      "anchor_percent": { "x": 83.37, "y": 74.60 },
+      "visible_bounds": { "x": 1289, "y": 642, "width": 210, "height": 119 },
+      "recommended_hitbox": { "x": 1274, "y": 625, "width": 240, "height": 150 },
+      "visibility": "clearly-visible",
+      "confidence": "high",
+      "closeup_asset": null,
+      "note": "现图没有清单中的梁下悬挂态，改锚定厨房/大门边现有竹篮；它是 C11 场景问答物件，不复用 C6 做饭精灵表。"
+    },
+    {
+      "id": "C12",
+      "name": "酸汤坛",
+      "scene_object": "矮桌右侧、热水瓶左侧的褐色陶坛",
+      "anchor": { "x": 617, "y": 667 },
+      "anchor_percent": { "x": 36.90, "y": 70.88 },
+      "visible_bounds": { "x": 580, "y": 611, "width": 74, "height": 113 },
+      "recommended_hitbox": { "x": 568, "y": 596, "width": 98, "height": 140 },
+      "visibility": "visible-but-semantically-ambiguous",
+      "confidence": "medium",
+      "closeup_asset": "assets/prop/酸汤坛-v1.webp",
+      "note": "陶坛可见，但场景中没有文字或结构可证明其一定是酸汤坛；热点短标签与独立特写共同承担语义。"
+    },
+    {
+      "id": "C12b",
+      "name": "火塘",
+      "scene_object": "外婆左侧火塘与明火",
+      "anchor": { "x": 1010, "y": 597 },
+      "anchor_percent": { "x": 60.41, "y": 63.44 },
+      "visible_bounds": { "x": 877, "y": 438, "width": 247, "height": 235 },
+      "recommended_hitbox": { "x": 950, "y": 533, "width": 130, "height": 135 },
+      "visibility": "clearly-visible",
+      "confidence": "high",
+      "closeup_asset": null,
+      "note": "火塘和明火均清楚可辨，直接在火口附近叠加小型文化物件标记。"
+    }
+  ]
+}
+
